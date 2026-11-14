@@ -15,6 +15,9 @@
       --text: #f3f4f6;
       --muted: #9ca3af;
       --border: #252836;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --err: #ef4444;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
@@ -28,7 +31,7 @@
     }
     .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; cursor: pointer; }
     .logo span { color: var(--accent); }
-    .search-box { display: flex; gap: 0.5rem; flex: 1; max-width: 420px; }
+    .search-box { display: flex; gap: 0.5rem; flex-1; max-width: 440px; }
     input {
       width: 100%; padding: 0.65rem 1rem; border-radius: 8px;
       border: 1px solid var(--border); background: var(--surface); color: var(--text);
@@ -36,14 +39,15 @@
     }
     input:focus { border-color: var(--accent); }
     button {
-      padding: 0.65rem 1.1rem; border-radius: 8px; border: none;
+      padding: 0.55rem 0.95rem; border-radius: 8px; border: none;
       background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
-      transition: 0.15s; white-space: nowrap;
+      transition: 0.15s; white-space: nowrap; font-size: 0.85rem;
     }
     button:hover { background: var(--accent-hover); }
     button.secondary { background: var(--surface-hover); border: 1px solid var(--border); color: var(--text); }
     button.secondary:hover { border-color: var(--accent); }
-    button.active { background: var(--accent); border-color: var(--accent); }
+    button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.failed { border-color: var(--err); opacity: 0.7; }
 
     main { max-width: 1280px; width: 100%; margin: 0 auto; padding: 2rem; flex: 1; }
     h2 { font-size: 1.25rem; margin-bottom: 1.25rem; color: var(--text); }
@@ -53,14 +57,28 @@
     .player-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
     .player-wrapper iframe, .player-wrapper video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
     #status-banner {
-      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.85); color: var(--text); font-size: 0.95rem; padding: 1.25rem; text-align: center; z-index: 5;
+      position: absolute; inset: 0; display: none; flex-direction: column; gap: 0.75rem;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.88); color: var(--text); font-size: 0.95rem; padding: 1.5rem; text-align: center; z-index: 5;
     }
     .player-controls { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
     .player-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
-    .server-bar, .ep-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .ep-grid { max-height: 180px; overflow-y: auto; padding-top: 0.5rem; border-top: 1px solid var(--border); }
-    .ep-btn { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+    .server-group-label { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .server-bar, .ep-grid { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .ep-grid { max-height: 170px; overflow-y: auto; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+    .ep-btn { padding: 0.4rem 0.75rem; font-size: 0.82rem; }
+
+    /* Live Debug Console */
+    .console-box {
+      background: #090a0f; border: 1px solid var(--border); border-radius: 8px;
+      padding: 0.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.78rem; max-height: 160px; overflow-y: auto; line-height: 1.45;
+    }
+    .console-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+    .log-info { color: #93c5fd; }
+    .log-ok { color: var(--ok); }
+    .log-warn { color: var(--warn); }
+    .log-err { color: var(--err); }
 
     /* Anime Grid */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.25rem; }
@@ -86,7 +104,7 @@
   <header>
     <div class="logo" onclick="resetHome()">Vexin<span>Stream</span></div>
     <form class="search-box" onsubmit="handleSearch(event)">
-      <input type="text" id="search-input" placeholder="Search anime..." />
+      <input type="text" id="search-input" placeholder="Search anime (English or Romaji)..." />
       <button type="submit">Search</button>
     </form>
   </header>
@@ -94,7 +112,10 @@
   <main>
     <section id="player-section">
       <div class="player-wrapper">
-        <div id="status-banner">Loading stream...</div>
+        <div id="status-banner">
+          <div id="status-text">Loading stream...</div>
+          <button onclick="tryNextServer()">Try Next Working Server →</button>
+        </div>
         <video id="hls-video" controls playsinline style="display:none;"></video>
         <iframe id="video-frame" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
       </div>
@@ -102,19 +123,36 @@
         <div class="player-header">
           <div>
             <h2 id="now-playing-title" style="margin-bottom: 0.25rem;">Anime Title</h2>
-            <p id="now-playing-sub" style="color: var(--muted); font-size: 0.9rem;">Episode 1</p>
+            <p id="now-playing-sub" style="color: var(--muted); font-size: 0.88rem;">Episode 1</p>
           </div>
-          <button class="secondary" onclick="closePlayer()">✕ Close Player</button>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="secondary" onclick="tryNextServer()">↻ Auto-Next Server</button>
+            <button class="secondary" onclick="closePlayer()">✕ Close</button>
+          </div>
         </div>
 
         <div>
-          <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem;">Servers:</div>
-          <div class="server-bar" id="server-bar"></div>
+          <div class="server-group-label">Primary Embed Servers (Ad-Free Multi-Source):</div>
+          <div class="server-bar" id="embed-server-bar"></div>
+        </div>
+
+        <div id="api-server-wrap" style="display:none;">
+          <div class="server-group-label">Direct HLS API Servers (Re:ANIME / Anikoto / AnimePahe):</div>
+          <div class="server-bar" id="api-server-bar"></div>
         </div>
 
         <div>
-          <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem;">Episodes:</div>
+          <div class="server-group-label">Episodes:</div>
           <div class="ep-grid" id="episode-grid"></div>
+        </div>
+
+        <!-- Live Console Output -->
+        <div>
+          <div class="console-header">
+            <span class="server-group-label" style="margin:0;">Live Stream Console / Diagnostics</span>
+            <button class="secondary" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="clearConsole()">Clear Log</button>
+          </div>
+          <div class="console-box" id="debug-console"></div>
         </div>
       </div>
     </section>
@@ -134,24 +172,48 @@
     const ANILIST_API = "https://graphql.anilist.co";
     let currentAnime = null;
     let currentEp = 1;
-    let activeServerKey = "megaplay-sub";
+    let activeServerKey = "vidnest-sub";
+    let failedServers = new Set();
     let hlsInstance = null;
 
-    // 1. Instant AniList-ID Iframe Embed Servers (Work directly in browser, zero backend needed)
+    // 1. Verified AniList-ID & MAL-ID Embed Servers (Vidnest primary + AnimePahe direct)
     const EMBED_SERVERS = [
-      { key: "megaplay-sub", name: "MegaPlay (Sub)", url: (id, ep) => `https://megaplay.buzz/stream/s-2/${id}/${ep}/sub` },
-      { key: "megaplay-dub", name: "MegaPlay (Dub)", url: (id, ep) => `https://megaplay.buzz/stream/s-2/${id}/${ep}/dub` },
-      { key: "vidnest-sub", name: "Vidnest (Sub)", url: (id, ep) => `https://vidnest.fun/anime/${id}/${ep}/sub` },
-      { key: "vidnest-dub", name: "Vidnest (Dub)", url: (id, ep) => `https://vidnest.fun/anime/${id}/${ep}/dub` }
+      { key: "vidnest-sub",       name: "Vidnest (Sub)",         url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/sub` },
+      { key: "vidnest-dub",       name: "Vidnest (Dub)",         url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/dub` },
+      { key: "vidnest-pahe-sub",  name: "AnimePahe Embed (Sub)", url: (a, ep) => `https://vidnest.fun/animepahe/${a.id}/${ep}/sub` },
+      { key: "vidnest-pahe-dub",  name: "AnimePahe Embed (Dub)", url: (a, ep) => `https://vidnest.fun/animepahe/${a.id}/${ep}/dub` },
+      { key: "vidlink-sub",       name: "VidLink (Sub)",         url: (a, ep) => `https://vidlink.pro/anime/${a.id}/${ep}?fallback=true` },
+      { key: "vidlink-dub",       name: "VidLink (Dub)",         url: (a, ep) => `https://vidlink.pro/anime/${a.id}/${ep}?dub=true&fallback=true` },
+      { key: "animenexus-sub",    name: "AnimeNexus (Sub)",      url: (a, ep) => `https://anime.nexus/embed/${a.id}/${ep}` },
+      { key: "autoembed-sub",     name: "AutoEmbed (Sub)",       url: (a, ep) => `https://player.autoembed.cc/embed/anime/${a.id}/${ep}` },
+      { key: "2embed-mal",        name: "2Embed (MAL)",          url: (a, ep) => `https://www.2embed.cc/embedanime/${a.idMal || a.id}-episode-${ep}` }
     ];
 
-    // 2. Anivexa-API HLS Providers (Requires ANIVEXA_API_URL above)
+    // 2. Direct HLS Providers via Anivexa-API (Uses ID lookup + automatic title-search fallback)
     const API_SERVERS = [
-      { key: "anizone", name: "AniZone (HLS)", provider: "anizone", lang: "sub" },
-      { key: "animepahe", name: "AnimePahe (HLS)", provider: "animepahe", lang: "sub" },
-      { key: "anikoto", name: "Anikoto (HLS)", provider: "anikoto", lang: "sub" },
-      { key: "reanime", name: "Re:ANIME (HLS)", provider: "reanime", lang: "sub" }
+      { key: "anizone-sub",   name: "AniZone (Sub)",   provider: "anizone",   lang: "sub" },
+      { key: "animepahe-sub", name: "AnimePahe (Sub)", provider: "animepahe", lang: "sub" },
+      { key: "anikoto-sub",   name: "Anikoto (Sub)",   provider: "anikoto",   lang: "sub" },
+      { key: "anikoto-dub",   name: "Anikoto (Dub)",   provider: "anikoto",   lang: "dub" },
+      { key: "reanime-sub",   name: "Re:ANIME (Sub)",  provider: "reanime",   lang: "sub" },
+      { key: "reanime-dub",   name: "Re:ANIME (Dub)",  provider: "reanime",   lang: "dub" },
+      { key: "allmanga-sub",  name: "AllManga (Sub)",  provider: "allmanga",  lang: "sub" }
     ];
+
+    function logMsg(msg, level = "info") {
+      const box = document.getElementById("debug-console");
+      const time = new Date().toLocaleTimeString();
+      const line = document.createElement("div");
+      line.className = `log-${level}`;
+      line.textContent = `[${time}] ${msg}`;
+      box.appendChild(line);
+      box.scrollTop = box.scrollHeight;
+      console[level === "err" ? "error" : level === "warn" ? "warn" : "log"](`[VexinStream] ${msg}`);
+    }
+
+    function clearConsole() {
+      document.getElementById("debug-console").innerHTML = "";
+    }
 
     async function fetchAniList(query, variables = {}) {
       const res = await fetch(ANILIST_API, {
@@ -170,11 +232,12 @@
           Page(perPage: 24) {
             media(type: ANIME, sort: TRENDING_DESC, isAdult: false) {
               id
+              idMal
               episodes
               nextAiringEpisode { episode }
               seasonYear
               format
-              title { english romaji }
+              title { english romaji native }
               coverImage { large }
             }
           }
@@ -192,11 +255,12 @@
           Page(perPage: 24) {
             media(type: ANIME, search: $search, sort: POPULARITY_DESC, isAdult: false) {
               id
+              idMal
               episodes
               nextAiringEpisode { episode }
               seasonYear
               format
-              title { english romaji }
+              title { english romaji native }
               coverImage { large }
             }
           }
@@ -218,7 +282,10 @@
             <div class="card-title">${title}</div>
             <div class="card-meta">${anime.format || "TV"} • ${anime.seasonYear || "TBA"} • ${totalEps || "?"} Eps</div>
           </div>`;
-        card.onclick = () => openPlayer(anime, 1);
+        card.onclick = () => {
+          failedServers.clear();
+          openPlayer(anime, 1);
+        };
         grid.appendChild(card);
       });
     }
@@ -236,41 +303,85 @@
       banner.style.display = "none";
     }
 
-    async function playApiStream(serverObj, anilistId, ep) {
+    function setBanner(text, showRetry = true) {
       const banner = document.getElementById("status-banner");
-      const video = document.getElementById("hls-video");
-      banner.textContent = `Resolving ${serverObj.name} for Episode ${ep}...`;
+      document.getElementById("status-text").textContent = text;
+      banner.querySelector("button").style.display = showRetry ? "inline-block" : "none";
       banner.style.display = "flex";
+    }
+
+    function tryNextServer() {
+      const allKeys = [
+        ...EMBED_SERVERS.map(s => s.key),
+        ...(ANIVEXA_API_URL ? API_SERVERS.map(s => s.key) : [])
+      ];
+      failedServers.add(activeServerKey);
+      const next = allKeys.find(k => !failedServers.has(k));
+      if (!next) {
+        failedServers.clear();
+        activeServerKey = allKeys[0];
+        logMsg("All servers cycled; resetting to first server.", "warn");
+      } else {
+        activeServerKey = next;
+        logMsg(`Switching to fallback server: ${activeServerKey}`, "info");
+      }
+      openPlayer(currentAnime, currentEp);
+    }
+
+    async function playApiStream(serverObj, anime, ep) {
+      const video = document.getElementById("hls-video");
+      const cleanTitle = (anime.title.romaji || anime.title.english || "").replace(/[^\w\s-]/g, " ").trim();
+      setBanner(`Resolving ${serverObj.name} for "${cleanTitle}" (AniList ${anime.id}) Ep ${ep}...`, false);
+      logMsg(`Requesting ${serverObj.name} -> AniList ID ${anime.id} | MAL ID ${anime.idMal || "N/A"} | Title "${cleanTitle}"`);
 
       try {
-        // 1. Trigger Anivexa's episode/ID mapper first so provider IDs are resolved
-        await fetch(`${ANIVEXA_API_URL}/episodes/${serverObj.provider}/${anilistId}`).catch(() => {});
+        let endpoint = `${ANIVEXA_API_URL}/watch/${serverObj.provider}/${anime.id}/${serverObj.lang}/${serverObj.provider}-${ep}`;
+        logMsg(`GET ${endpoint}`);
+        let srcRes = await fetch(endpoint);
+        let srcData = await srcRes.json();
 
-        // 2. Fetch stream URL
-        const endpoint = `${ANIVEXA_API_URL}/watch/${serverObj.provider}/${anilistId}/${serverObj.lang}/${serverObj.provider}-${ep}`;
-        const srcRes = await fetch(endpoint);
-        const srcData = await srcRes.json();
+        if ((!srcRes.ok || srcData.error) && cleanTitle) {
+          logMsg(`AniList ID match failed (${srcData.error || srcRes.status}). Searching provider by title: "${cleanTitle}"...`, "warn");
+          const searchUrl = `${ANIVEXA_API_URL}/search/${serverObj.provider}?q=${encodeURIComponent(cleanTitle)}`;
+          const searchRes = await fetch(searchUrl);
+          if (searchRes.ok) {
+            const searchData = await searchRes.json();
+            const hits = searchData.results || searchData.data || (Array.isArray(searchData) ? searchData : []);
+            if (hits.length > 0 && hits[0].id) {
+              logMsg(`Title match found: ${hits[0].title || hits[0].name} (ID: ${hits[0].id})`, "ok");
+              const epUrl = `${ANIVEXA_API_URL}/watch/${serverObj.provider}/${hits[0].id}/${serverObj.lang}/${encodeURIComponent(hits[0].id)}-${ep}`;
+              srcRes = await fetch(epUrl);
+              srcData = await srcRes.json();
+            }
+          }
+        }
+
         const sources = srcData.sources || srcData.data?.sources || (srcData.url ? [srcData] : []);
         const best = sources.find(s => s.url?.includes(".m3u8")) || sources[0];
 
         if (!best || !best.url) {
-          throw new Error(srcData.error || "No stream returned for this title");
+          throw new Error(srcData.error || `HTTP ${srcRes.status} - No playable stream returned`);
         }
 
         const streamUrl = best.url;
-        banner.style.display = "none";
+        logMsg(`Stream resolved (${serverObj.name}): ${streamUrl.slice(0, 75)}...`, "ok");
+        document.getElementById("status-banner").style.display = "none";
         video.style.display = "block";
 
         if (Hls.isSupported() && streamUrl.includes(".m3u8")) {
           hlsInstance = new Hls();
           hlsInstance.loadSource(streamUrl);
           hlsInstance.attachMedia(video);
-          hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+          hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+            logMsg(`HLS manifest loaded — starting playback.`, "ok");
+            video.play().catch(() => {});
+          });
           hlsInstance.on(Hls.Events.ERROR, (_, data) => {
             if (data.fatal) {
-              stopMedia();
-              banner.textContent = `${serverObj.name} stream blocked in browser. Switch to MegaPlay (Sub) or Vidnest (Sub) below.`;
-              banner.style.display = "flex";
+              logMsg(`HLS fatal error (${data.type}: ${data.details}) — upstream CDN blocked browser playback.`, "err");
+              failedServers.add(serverObj.key);
+              renderServerButtons();
+              setBanner(`${serverObj.name} CDN blocked direct playback. Click below to switch servers.`);
             }
           });
         } else {
@@ -278,7 +389,38 @@
           video.play().catch(() => {});
         }
       } catch (err) {
-        banner.textContent = `${serverObj.name} unavailable (${err.message}). Switch to MegaPlay (Sub) or Vidnest (Sub) below.`;
+        logMsg(`${serverObj.name} failed: ${err.message}`, "err");
+        failedServers.add(serverObj.key);
+        renderServerButtons();
+        setBanner(`${serverObj.name} unavailable (${err.message}).`);
+      }
+    }
+
+    function renderServerButtons() {
+      const embedBar = document.getElementById("embed-server-bar");
+      embedBar.innerHTML = "";
+      EMBED_SERVERS.forEach(srv => {
+        const btn = document.createElement("button");
+        const isFail = failedServers.has(srv.key);
+        btn.className = `secondary ${activeServerKey === srv.key ? "active" : ""} ${isFail ? "failed" : ""}`;
+        btn.textContent = isFail ? `✕ ${srv.name}` : srv.name;
+        btn.onclick = () => { activeServerKey = srv.key; openPlayer(currentAnime, currentEp); };
+        embedBar.appendChild(btn);
+      });
+
+      const apiWrap = document.getElementById("api-server-wrap");
+      const apiBar = document.getElementById("api-server-bar");
+      if (ANIVEXA_API_URL) {
+        apiWrap.style.display = "block";
+        apiBar.innerHTML = "";
+        API_SERVERS.forEach(srv => {
+          const btn = document.createElement("button");
+          const isFail = failedServers.has(srv.key);
+          btn.className = `secondary ${activeServerKey === srv.key ? "active" : ""} ${isFail ? "failed" : ""}`;
+          btn.textContent = isFail ? `✕ ${srv.name}` : srv.name;
+          btn.onclick = () => { activeServerKey = srv.key; openPlayer(currentAnime, currentEp); };
+          apiBar.appendChild(btn);
+        });
       }
     }
 
@@ -290,40 +432,28 @@
 
       document.getElementById("player-section").style.display = "block";
       document.getElementById("now-playing-title").textContent = title;
-      document.getElementById("now-playing-sub").textContent = `Episode ${ep}`;
+      document.getElementById("now-playing-sub").textContent = `Episode ${ep} • AniList #${anime.id}${anime.idMal ? ` • MAL #${anime.idMal}` : ""}`;
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       stopMedia();
-
-      const serverBar = document.getElementById("server-bar");
-      serverBar.innerHTML = "";
-
-      EMBED_SERVERS.forEach(srv => {
-        const btn = document.createElement("button");
-        btn.className = `secondary ${activeServerKey === srv.key ? "active" : ""}`;
-        btn.textContent = srv.name;
-        btn.onclick = () => { activeServerKey = srv.key; openPlayer(anime, currentEp); };
-        serverBar.appendChild(btn);
-      });
-
-      if (ANIVEXA_API_URL) {
-        API_SERVERS.forEach(srv => {
-          const btn = document.createElement("button");
-          btn.className = `secondary ${activeServerKey === srv.key ? "active" : ""}`;
-          btn.textContent = srv.name;
-          btn.onclick = () => { activeServerKey = srv.key; openPlayer(anime, currentEp); };
-          serverBar.appendChild(btn);
-        });
-      }
+      renderServerButtons();
 
       const apiMatch = ANIVEXA_API_URL ? API_SERVERS.find(s => s.key === activeServerKey) : null;
       if (apiMatch) {
-        playApiStream(apiMatch, anime.id, ep);
+        playApiStream(apiMatch, anime, ep);
       } else {
         const embedMatch = EMBED_SERVERS.find(s => s.key === activeServerKey) || EMBED_SERVERS[0];
+        const targetUrl = embedMatch.url(anime, ep);
+        logMsg(`Loading iframe [${embedMatch.name}]: ${targetUrl}`);
         const iframe = document.getElementById("video-frame");
         iframe.style.display = "block";
-        iframe.src = embedMatch.url(anime.id, ep);
+        iframe.onload = () => logMsg(`Iframe [${embedMatch.name}] finished loading frame.`, "ok");
+        iframe.onerror = () => {
+          logMsg(`Iframe [${embedMatch.name}] failed to load.`, "err");
+          failedServers.add(embedMatch.key);
+          renderServerButtons();
+        };
+        iframe.src = targetUrl;
       }
 
       const epGrid = document.getElementById("episode-grid");
@@ -348,6 +478,7 @@
       loadTrending();
     }
 
+    logMsg("VexinStream initialized. Ready.");
     loadTrending();
   </script>
 </body>
