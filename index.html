@@ -54,7 +54,7 @@
     .player-wrapper iframe, .player-wrapper video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
     #status-banner {
       position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.8); color: var(--text); font-size: 0.95rem; padding: 1rem; text-align: center; z-index: 5;
+      background: rgba(0,0,0,0.85); color: var(--text); font-size: 0.95rem; padding: 1.25rem; text-align: center; z-index: 5;
     }
     .player-controls { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
     .player-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
@@ -128,7 +128,7 @@
   </footer>
 
   <script>
-    // PASTE YOUR DEPLOYED ANIVEXA-API URL HERE (no trailing slash), e.g. "https://anivexa-api.vercel.app"
+    // PASTE YOUR DEPLOYED RENDER ANIVEXA-API URL HERE (no trailing slash), e.g. "https://anivexa-api.onrender.com"
     const ANIVEXA_API_URL = "https://anivexa-api-55v6.onrender.com";
 
     const ANILIST_API = "https://graphql.anilist.co";
@@ -137,14 +137,15 @@
     let activeServerKey = ANIVEXA_API_URL ? "reanime" : "vidplus-sub";
     let hlsInstance = null;
 
-    // 1. Direct Stream Providers (Powered by your Anivexa-API backend)
+    // 1. Direct Stream Providers via Anivexa-API (/watch/:provider/:anilistId/sub|dub/:provider-:ep)
     const API_SERVERS = [
-      { key: "reanime", name: "Re:ANIME (HD)", provider: "reanime" },
-      { key: "anikoto", name: "Anikoto (HD)", provider: "anikoto" },
-      { key: "animepahe", name: "AnimePahe (HD)", provider: "animepahe" }
+      { key: "reanime", name: "Re:ANIME (Sub)", provider: "reanime", lang: "sub" },
+      { key: "reanime-dub", name: "Re:ANIME (Dub)", provider: "reanime", lang: "dub" },
+      { key: "anikoto", name: "Anikoto (Sub)", provider: "anikoto", lang: "sub" },
+      { key: "animepahe", name: "AnimePahe (Sub)", provider: "animepahe", lang: "sub" }
     ];
 
-    // 2. Built-in Iframe Fallback Servers (Work with zero backend)
+    // 2. Built-in Iframe Fallback Servers (Work immediately even with ANIVEXA_API_URL empty)
     const EMBED_SERVERS = [
       { key: "vidplus-sub", name: "VidPlus (Sub)", url: (id, ep) => `https://player.vidplus.to/embed/anime/${id}/${ep}?dub=false` },
       { key: "vidplus-dub", name: "VidPlus (Dub)", url: (id, ep) => `https://player.vidplus.to/embed/anime/${id}/${ep}?dub=true` },
@@ -234,36 +235,24 @@
       banner.style.display = "none";
     }
 
-    async function playApiStream(provider, anilistId, ep) {
+    async function playApiStream(serverObj, anilistId, ep) {
       const banner = document.getElementById("status-banner");
       const video = document.getElementById("hls-video");
-      banner.textContent = `Fetching ${provider.toUpperCase()} stream for Episode ${ep}...`;
+      banner.textContent = `Fetching ${serverObj.name} stream for Episode ${ep}...`;
       banner.style.display = "flex";
 
       try {
-        // Fetch episode list for this AniList ID from your Anivexa-API instance
-        const epRes = await fetch(`${ANIVEXA_API_URL}/api/episodes/${anilistId}?provider=${provider}`);
-        const epData = await epRes.json();
-        const episodes = epData.episodes || epData.data || epData;
-        const targetEp = Array.isArray(episodes)
-          ? episodes.find(e => Number(e.number || e.episode) === Number(ep)) || episodes[ep - 1]
-          : null;
-
-        if (!targetEp) throw new Error("Episode not found on this provider");
-
-        const epId = encodeURIComponent(targetEp.id || targetEp.episodeId);
-        const srcRes = await fetch(`${ANIVEXA_API_URL}/api/sources/${epId}?provider=${provider}`);
+        const endpoint = `${ANIVEXA_API_URL}/watch/${serverObj.provider}/${anilistId}/${serverObj.lang}/${serverObj.provider}-${ep}`;
+        const srcRes = await fetch(endpoint);
         const srcData = await srcRes.json();
-        const sources = srcData.sources || srcData.data?.sources || [];
+        const sources = srcData.sources || srcData.data?.sources || (srcData.url ? [srcData] : []);
         const best = sources.find(s => s.url?.includes(".m3u8")) || sources[0];
 
-        if (!best || !best.url) throw new Error("No playable stream URL returned");
+        if (!best || !best.url) {
+          throw new Error(srcData.error || "No stream returned (provider may block cloud IP)");
+        }
 
-        // Route via Anivexa's built-in proxy if needed so Referer headers don't 403
-        const streamUrl = best.proxyUrl
-          ? `${ANIVEXA_API_URL}${best.proxyUrl}`
-          : `${ANIVEXA_API_URL}/api/proxy?url=${encodeURIComponent(best.url)}`;
-
+        const streamUrl = best.url;
         banner.style.display = "none";
         video.style.display = "block";
 
@@ -272,12 +261,19 @@
           hlsInstance.loadSource(streamUrl);
           hlsInstance.attachMedia(video);
           hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+          hlsInstance.on(Hls.Events.ERROR, (_, data) => {
+            if (data.fatal) {
+              stopMedia();
+              banner.textContent = `${serverObj.name} stream blocked CORS/Referer in browser. Try VidPlus (Sub) or another server below.`;
+              banner.style.display = "flex";
+            }
+          });
         } else {
           video.src = streamUrl;
           video.play().catch(() => {});
         }
       } catch (err) {
-        banner.textContent = `Stream unavailable on ${provider} (${err.message}). Try switching servers below.`;
+        banner.textContent = `${serverObj.name} unavailable (${err.message}). Try switching servers below.`;
       }
     }
 
@@ -294,7 +290,6 @@
 
       stopMedia();
 
-      // Render Server Buttons
       const serverBar = document.getElementById("server-bar");
       serverBar.innerHTML = "";
 
@@ -316,10 +311,9 @@
         serverBar.appendChild(btn);
       });
 
-      // Play selected server
       const apiMatch = ANIVEXA_API_URL ? API_SERVERS.find(s => s.key === activeServerKey) : null;
       if (apiMatch) {
-        playApiStream(apiMatch.provider, anime.id, ep);
+        playApiStream(apiMatch, anime.id, ep);
       } else {
         const embedMatch = EMBED_SERVERS.find(s => s.key === activeServerKey) || EMBED_SERVERS[0];
         const iframe = document.getElementById("video-frame");
@@ -327,7 +321,6 @@
         iframe.src = embedMatch.url(anime.id, ep);
       }
 
-      // Render Episode Buttons
       const epGrid = document.getElementById("episode-grid");
       epGrid.innerHTML = "";
       for (let i = 1; i <= totalEps; i++) {
