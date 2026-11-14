@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VexinStream — Watch Anime Free</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --surface: #14161f;
+      --surface-hover: #1d202d;
+      --accent: #7c5cff;
+      --accent-hover: #9175ff;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --border: #252836;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(11, 12, 16, 0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem; display: flex; flex-wrap: wrap; gap: 1rem;
+      align-items: center; justify-content: space-between;
+    }
+    .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; cursor: pointer; }
+    .logo span { color: var(--accent); }
+    .search-box { display: flex; gap: 0.5rem; flex: 1; max-width: 420px; }
+    input {
+      width: 100%; padding: 0.65rem 1rem; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      outline: none; font-size: 0.95rem;
+    }
+    input:focus { border-color: var(--accent); }
+    button {
+      padding: 0.65rem 1.1rem; border-radius: 8px; border: none;
+      background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
+      transition: 0.15s; white-space: nowrap;
+    }
+    button:hover { background: var(--accent-hover); }
+    button.secondary { background: var(--surface-hover); border: 1px solid var(--border); color: var(--text); }
+    button.secondary:hover { border-color: var(--accent); }
+    button.active { background: var(--accent); border-color: var(--accent); }
+
+    main { max-width: 1280px; width: 100%; margin: 0 auto; padding: 2rem; flex: 1; }
+    h2 { font-size: 1.25rem; margin-bottom: 1.25rem; color: var(--text); }
+
+    /* Player Section */
+    #player-section { display: none; margin-bottom: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .player-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+    .player-wrapper iframe, .player-wrapper video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    #status-banner {
+      position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.8); color: var(--text); font-size: 0.95rem; padding: 1rem; text-align: center; z-index: 5;
+    }
+    .player-controls { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+    .player-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+    .server-bar, .ep-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .ep-grid { max-height: 180px; overflow-y: auto; padding-top: 0.5rem; border-top: 1px solid var(--border); }
+    .ep-btn { padding: 0.45rem 0.8rem; font-size: 0.85rem; }
+
+    /* Anime Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.25rem; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
+    .card-body { padding: 0.85rem; }
+    .card-title { font-size: 0.95rem; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-meta { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+
+    footer {
+      border-top: 1px solid var(--border); padding: 1.5rem 2rem;
+      text-align: center; color: var(--muted); font-size: 0.85rem;
+    }
+    footer strong { color: var(--text); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo" onclick="resetHome()">Vexin<span>Stream</span></div>
+    <form class="search-box" onsubmit="handleSearch(event)">
+      <input type="text" id="search-input" placeholder="Search anime..." />
+      <button type="submit">Search</button>
+    </form>
+  </header>
+
+  <main>
+    <section id="player-section">
+      <div class="player-wrapper">
+        <div id="status-banner">Loading stream...</div>
+        <video id="hls-video" controls playsinline style="display:none;"></video>
+        <iframe id="video-frame" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+      </div>
+      <div class="player-controls">
+        <div class="player-header">
+          <div>
+            <h2 id="now-playing-title" style="margin-bottom: 0.25rem;">Anime Title</h2>
+            <p id="now-playing-sub" style="color: var(--muted); font-size: 0.9rem;">Episode 1</p>
+          </div>
+          <button class="secondary" onclick="closePlayer()">✕ Close Player</button>
+        </div>
+
+        <div>
+          <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem;">Servers:</div>
+          <div class="server-bar" id="server-bar"></div>
+        </div>
+
+        <div>
+          <div style="font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem;">Episodes:</div>
+          <div class="ep-grid" id="episode-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <h2 id="section-title">Trending Now</h2>
+    <div class="grid" id="anime-grid"></div>
+  </main>
+
+  <footer>
+    <p>Created &amp; Powered by <strong>VexinStream</strong> • Zero local storage.</p>
+  </footer>
+
+  <script>
+    // PASTE YOUR DEPLOYED ANIVEXA-API URL HERE (no trailing slash), e.g. "https://anivexa-api.vercel.app"
+    const ANIVEXA_API_URL = "https://anivexa-api-55v6.onrender.com";
+
+    const ANILIST_API = "https://graphql.anilist.co";
+    let currentAnime = null;
+    let currentEp = 1;
+    let activeServerKey = ANIVEXA_API_URL ? "reanime" : "vidplus-sub";
+    let hlsInstance = null;
+
+    // 1. Direct Stream Providers (Powered by your Anivexa-API backend)
+    const API_SERVERS = [
+      { key: "reanime", name: "Re:ANIME (HD)", provider: "reanime" },
+      { key: "anikoto", name: "Anikoto (HD)", provider: "anikoto" },
+      { key: "animepahe", name: "AnimePahe (HD)", provider: "animepahe" }
+    ];
+
+    // 2. Built-in Iframe Fallback Servers (Work with zero backend)
+    const EMBED_SERVERS = [
+      { key: "vidplus-sub", name: "VidPlus (Sub)", url: (id, ep) => `https://player.vidplus.to/embed/anime/${id}/${ep}?dub=false` },
+      { key: "vidplus-dub", name: "VidPlus (Dub)", url: (id, ep) => `https://player.vidplus.to/embed/anime/${id}/${ep}?dub=true` },
+      { key: "2anime-sub", name: "2Anime (Sub)", url: (id, ep) => `https://2anime.xyz/embed/${id}-episode-${ep}` }
+    ];
+
+    async function fetchAniList(query, variables = {}) {
+      const res = await fetch(ANILIST_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ query, variables })
+      });
+      const json = await res.json();
+      return json.data.Page.media;
+    }
+
+    async function loadTrending() {
+      document.getElementById("section-title").textContent = "Trending Now";
+      const query = `
+        query {
+          Page(perPage: 24) {
+            media(type: ANIME, sort: TRENDING_DESC, isAdult: false) {
+              id
+              episodes
+              nextAiringEpisode { episode }
+              seasonYear
+              format
+              title { english romaji }
+              coverImage { large }
+            }
+          }
+        }`;
+      renderGrid(await fetchAniList(query));
+    }
+
+    async function handleSearch(e) {
+      e.preventDefault();
+      const term = document.getElementById("search-input").value.trim();
+      if (!term) return loadTrending();
+      document.getElementById("section-title").textContent = `Results for "${term}"`;
+      const query = `
+        query ($search: String) {
+          Page(perPage: 24) {
+            media(type: ANIME, search: $search, sort: POPULARITY_DESC, isAdult: false) {
+              id
+              episodes
+              nextAiringEpisode { episode }
+              seasonYear
+              format
+              title { english romaji }
+              coverImage { large }
+            }
+          }
+        }`;
+      renderGrid(await fetchAniList(query, { search: term }));
+    }
+
+    function renderGrid(list) {
+      const grid = document.getElementById("anime-grid");
+      grid.innerHTML = "";
+      list.forEach(anime => {
+        const title = anime.title.english || anime.title.romaji;
+        const totalEps = anime.episodes || (anime.nextAiringEpisode ? anime.nextAiringEpisode.episode - 1 : 12);
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${anime.coverImage.large}" alt="${title}" loading="lazy" />
+          <div class="card-body">
+            <div class="card-title">${title}</div>
+            <div class="card-meta">${anime.format || "TV"} • ${anime.seasonYear || "TBA"} • ${totalEps || "?"} Eps</div>
+          </div>`;
+        card.onclick = () => openPlayer(anime, 1);
+        grid.appendChild(card);
+      });
+    }
+
+    function stopMedia() {
+      const video = document.getElementById("hls-video");
+      const iframe = document.getElementById("video-frame");
+      const banner = document.getElementById("status-banner");
+      if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+      video.pause();
+      video.removeAttribute("src");
+      video.style.display = "none";
+      iframe.src = "";
+      iframe.style.display = "none";
+      banner.style.display = "none";
+    }
+
+    async function playApiStream(provider, anilistId, ep) {
+      const banner = document.getElementById("status-banner");
+      const video = document.getElementById("hls-video");
+      banner.textContent = `Fetching ${provider.toUpperCase()} stream for Episode ${ep}...`;
+      banner.style.display = "flex";
+
+      try {
+        // Fetch episode list for this AniList ID from your Anivexa-API instance
+        const epRes = await fetch(`${ANIVEXA_API_URL}/api/episodes/${anilistId}?provider=${provider}`);
+        const epData = await epRes.json();
+        const episodes = epData.episodes || epData.data || epData;
+        const targetEp = Array.isArray(episodes)
+          ? episodes.find(e => Number(e.number || e.episode) === Number(ep)) || episodes[ep - 1]
+          : null;
+
+        if (!targetEp) throw new Error("Episode not found on this provider");
+
+        const epId = encodeURIComponent(targetEp.id || targetEp.episodeId);
+        const srcRes = await fetch(`${ANIVEXA_API_URL}/api/sources/${epId}?provider=${provider}`);
+        const srcData = await srcRes.json();
+        const sources = srcData.sources || srcData.data?.sources || [];
+        const best = sources.find(s => s.url?.includes(".m3u8")) || sources[0];
+
+        if (!best || !best.url) throw new Error("No playable stream URL returned");
+
+        // Route via Anivexa's built-in proxy if needed so Referer headers don't 403
+        const streamUrl = best.proxyUrl
+          ? `${ANIVEXA_API_URL}${best.proxyUrl}`
+          : `${ANIVEXA_API_URL}/api/proxy?url=${encodeURIComponent(best.url)}`;
+
+        banner.style.display = "none";
+        video.style.display = "block";
+
+        if (Hls.isSupported() && streamUrl.includes(".m3u8")) {
+          hlsInstance = new Hls();
+          hlsInstance.loadSource(streamUrl);
+          hlsInstance.attachMedia(video);
+          hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+        } else {
+          video.src = streamUrl;
+          video.play().catch(() => {});
+        }
+      } catch (err) {
+        banner.textContent = `Stream unavailable on ${provider} (${err.message}). Try switching servers below.`;
+      }
+    }
+
+    function openPlayer(anime, ep) {
+      currentAnime = anime;
+      currentEp = ep;
+      const title = anime.title.english || anime.title.romaji;
+      const totalEps = anime.episodes || (anime.nextAiringEpisode ? anime.nextAiringEpisode.episode - 1 : 24) || 12;
+
+      document.getElementById("player-section").style.display = "block";
+      document.getElementById("now-playing-title").textContent = title;
+      document.getElementById("now-playing-sub").textContent = `Episode ${ep}`;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      stopMedia();
+
+      // Render Server Buttons
+      const serverBar = document.getElementById("server-bar");
+      serverBar.innerHTML = "";
+
+      if (ANIVEXA_API_URL) {
+        API_SERVERS.forEach(srv => {
+          const btn = document.createElement("button");
+          btn.className = `secondary ${activeServerKey === srv.key ? "active" : ""}`;
+          btn.textContent = srv.name;
+          btn.onclick = () => { activeServerKey = srv.key; openPlayer(anime, currentEp); };
+          serverBar.appendChild(btn);
+        });
+      }
+
+      EMBED_SERVERS.forEach(srv => {
+        const btn = document.createElement("button");
+        btn.className = `secondary ${activeServerKey === srv.key ? "active" : ""}`;
+        btn.textContent = srv.name;
+        btn.onclick = () => { activeServerKey = srv.key; openPlayer(anime, currentEp); };
+        serverBar.appendChild(btn);
+      });
+
+      // Play selected server
+      const apiMatch = ANIVEXA_API_URL ? API_SERVERS.find(s => s.key === activeServerKey) : null;
+      if (apiMatch) {
+        playApiStream(apiMatch.provider, anime.id, ep);
+      } else {
+        const embedMatch = EMBED_SERVERS.find(s => s.key === activeServerKey) || EMBED_SERVERS[0];
+        const iframe = document.getElementById("video-frame");
+        iframe.style.display = "block";
+        iframe.src = embedMatch.url(anime.id, ep);
+      }
+
+      // Render Episode Buttons
+      const epGrid = document.getElementById("episode-grid");
+      epGrid.innerHTML = "";
+      for (let i = 1; i <= totalEps; i++) {
+        const btn = document.createElement("button");
+        btn.className = `secondary ep-btn ${i === ep ? "active" : ""}`;
+        btn.textContent = `Ep ${i}`;
+        btn.onclick = () => openPlayer(anime, i);
+        epGrid.appendChild(btn);
+      }
+    }
+
+    function closePlayer() {
+      stopMedia();
+      document.getElementById("player-section").style.display = "none";
+    }
+
+    function resetHome() {
+      document.getElementById("search-input").value = "";
+      closePlayer();
+      loadTrending();
+    }
+
+    loadTrending();
+  </script>
+</body>
+</html>
