@@ -2,9 +2,21 @@
 <html lang="en" data-theme="dark" data-accent="purple">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
   <title>VexinStream — Watch Anime Free | by VenixRyzen</title>
+
+  <!-- PWA Manifest & Mobile App Meta Tags -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" id="meta-theme-color" content="#7c5cff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VexinStream" />
+
+  <!-- Favicon & Apple Touch Icon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%237c5cff'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23090a0f'/%3E%3Cpath d='M16 16 L32 48 L48 16 H39 L32 32 L25 16 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%237c5cff'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='%2308090e'/%3E%3Cpath d='M45 45 L90 135 L135 45 H110 L90 90 L70 45 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
+
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     :root {
@@ -45,7 +57,11 @@
     [data-accent="pink"]    { --accent: #ec4899; --accent-hover: #f472b6; --accent-soft: rgba(236, 72, 153, 0.16); --accent-glow: rgba(236, 72, 153, 0.35); }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.2s, color 0.2s; overflow-x: hidden; }
+    body {
+      background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column;
+      transition: background 0.2s, color 0.2s; overflow-x: hidden;
+      padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+    }
 
     ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -89,7 +105,7 @@
     .tab-btn:hover { color: var(--text); background: var(--surface-2); }
     .tab-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
-    .nav-right { display: flex; align-items: center; gap: 0.45rem; }
+    .nav-right { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
     .search-box { display: flex; gap: 0.35rem; }
     input[type="text"], input[type="number"], input[type="date"], select {
       padding: 0.48rem 0.8rem; border-radius: 9px; border: 1px solid var(--border);
@@ -109,6 +125,10 @@
     button.active-pill { background: var(--accent); border-color: var(--accent); color: #fff; }
     button.shield-on { background: rgba(34, 197, 94, 0.15); border: 1px solid var(--ok); color: var(--ok); }
     button.shield-off { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--err); color: var(--err); }
+    button.install-btn {
+      display: none; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent);
+    }
+    button.install-btn:hover { background: var(--accent); color: #fff; }
     .icon-btn { padding: 0.48rem 0.7rem; font-size: 0.95rem; }
 
     /* First-Visit Maturity Banner */
@@ -307,6 +327,10 @@
       border: 1px solid var(--border); padding: 0.65rem; border-radius: 9px; line-height: 1.45;
     }
     .oauth-hint code { color: var(--accent); font-family: monospace; word-break: break-all; }
+    .ios-step {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.7rem 0.85rem; font-size: 0.85rem; line-height: 1.45;
+    }
 
     /* Footer */
     footer {
@@ -362,6 +386,7 @@
           <input type="text" id="search-input" placeholder="Search anime..." />
           <button type="submit">Go</button>
         </form>
+        <button class="install-btn" id="header-install-btn" onclick="triggerInstallPWA()">📲 Install App</button>
         <button class="secondary" id="maturity-pill-btn" onclick="openSettingsModal()" title="Content Maturity Filter">🛡️ SFW</button>
         <button class="secondary icon-btn" onclick="openSettingsModal()" title="Settings & Themes">⚙️</button>
         <button class="secondary" id="auth-btn" onclick="openAuthModal()">Sign In</button>
@@ -531,8 +556,16 @@
   <div class="modal-backdrop" id="settings-modal" onclick="if(event.target===this) closeSettingsModal()">
     <div class="modal">
       <h3>⚙️ VexinStream Settings</h3>
-      <p>Customize content maturity, title language, ad blocking, and theme colors.</p>
+      <p>Customize content maturity, title language, ad blocking, app installation, and theme colors.</p>
       <div class="modal-actions">
+        <div class="setting-row" id="settings-install-row" style="display:none;">
+          <div>
+            <div class="setting-label">📲 Install VexinStream App</div>
+            <div class="setting-sub">Add to Home Screen / Desktop standalone app</div>
+          </div>
+          <button onclick="closeSettingsModal(); triggerInstallPWA();">Install</button>
+        </div>
+
         <div class="setting-row">
           <div>
             <div class="setting-label">🔞 Content &amp; Maturity Filter</div>
@@ -592,6 +625,19 @@
     </div>
   </div>
 
+  <!-- iOS Safari Add-to-Home-Screen Modal -->
+  <div class="modal-backdrop" id="ios-install-modal" onclick="if(event.target===this) closeIosModal()">
+    <div class="modal">
+      <h3>📲 Install VexinStream on iPhone / iPad</h3>
+      <p>Apple Safari doesn't allow automatic install pop-ups, so follow these 2 quick taps to add VexinStream as a full-screen app:</p>
+      <div class="modal-actions">
+        <div class="ios-step"><strong>1.</strong> Tap the <strong>Share</strong> icon (square with an up arrow <strong>⍐</strong>) in Safari's bottom or top bar.</div>
+        <div class="ios-step"><strong>2.</strong> Scroll down and tap <strong>"Add to Home Screen"</strong>, then tap <strong>Add</strong>.</div>
+        <button onclick="closeIosModal()">Got It</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Sign-In Modal -->
   <div class="modal-backdrop" id="auth-modal" onclick="if(event.target===this) closeAuthModal()">
     <div class="modal">
@@ -642,12 +688,13 @@
     let activeServerKey = "vidnest-sub";
     let scheduleDate = new Date();
     let hlsInstance = null;
+    let deferredInstallPrompt = null;
 
     let userProfile = JSON.parse(localStorage.getItem("vexin_user") || "null");
     let watchlist = JSON.parse(localStorage.getItem("vexin_watchlist") || "[]");
     let watchHistory = JSON.parse(localStorage.getItem("vexin_history") || "[]");
 
-    // 1. Multi-Source Verified Embed Servers (Vidnest + Videasy + MegaPlay MAL + ZokoAnime)
+    // 1. Primary Multi-Source Embed Servers
     const EMBED_SERVERS = [
       { key: "vidnest-sub",      name: "Vidnest (Sub)",         url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/sub` },
       { key: "vidnest-dub",      name: "Vidnest (Dub)",         url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/dub` },
@@ -671,15 +718,80 @@
       { key: "allmanga-sub",  name: "AllManga (HLS)",  provider: "allmanga",  lang: "sub" }
     ];
 
-    /* Smart Title Resolver: Uses official English -> English Synonym -> Romaji */
+    /* PWA & Install Prompt Logic */
+    function isStandaloneMode() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function isIosSafari() {
+      const ua = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(ua) && !isStandaloneMode();
+    }
+
+    function updateInstallButtons(visible) {
+      document.getElementById("header-install-btn").style.display = visible ? "inline-block" : "none";
+      document.getElementById("settings-install-row").style.display = visible ? "flex" : "none";
+    }
+
+    function initPWA() {
+      // Register Service Worker when served over HTTP/HTTPS
+      if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+        navigator.serviceWorker.register("./sw.js")
+          .then(() => logMsg("PWA Service Worker active."))
+          .catch((err) => logMsg(`SW note: ${err.message}`));
+      }
+
+      if (isStandaloneMode()) {
+        updateInstallButtons(false);
+        logMsg("Launched in Standalone App mode.");
+        return;
+      }
+
+      // Show iOS Safari manual Add-to-Home-Screen button
+      if (isIosSafari()) {
+        updateInstallButtons(true);
+      }
+
+      // Listen for Chromium/Android native install prompt
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        updateInstallButtons(true);
+        logMsg("PWA install prompt ready.");
+      });
+
+      window.addEventListener("appinstalled", () => {
+        deferredInstallPrompt = null;
+        updateInstallButtons(false);
+        logMsg("VexinStream installed to device!");
+      });
+    }
+
+    async function triggerInstallPWA() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        logMsg(`Install prompt outcome: ${choice.outcome}`);
+        if (choice.outcome === "accepted") {
+          deferredInstallPrompt = null;
+          updateInstallButtons(false);
+        }
+      } else if (isIosSafari()) {
+        document.getElementById("ios-install-modal").style.display = "flex";
+      }
+    }
+
+    function closeIosModal() {
+      document.getElementById("ios-install-modal").style.display = "none";
+    }
+
+    /* Smart Title Resolver: Official English -> English Synonym -> Romaji */
     function findEnglishSynonym(anime) {
       if (!anime || !Array.isArray(anime.synonyms)) return null;
-      // Pick Latin-script synonyms that aren't identical to Romaji
       const romajiLower = (anime.title?.romaji || "").toLowerCase();
       const latinSynonym = anime.synonyms.find(s => {
         if (!s || s.length < 3) return false;
         if (s.toLowerCase() === romajiLower) return false;
-        // Must contain English letters and NO Japanese/Korean/Chinese characters
         const hasLatin = /[a-zA-Z]{3,}/.test(s);
         const hasCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]/.test(s);
         return hasLatin && !hasCJK;
@@ -726,6 +838,9 @@
     function applySettingsUI() {
       document.documentElement.setAttribute("data-theme", settings.theme || "dark");
       document.documentElement.setAttribute("data-accent", settings.accent || "purple");
+      const themeMeta = document.getElementById("meta-theme-color");
+      if (themeMeta) themeMeta.setAttribute("content", `#${ACCENT_HEX[settings.accent] || "7c5cff"}`);
+
       document.getElementById("setting-title-lang").value = settings.titleLang || "ENGLISH";
       document.getElementById("setting-maturity").value = settings.maturity || "SFW";
       document.getElementById("setting-theme-btn").textContent = settings.theme === "dark" ? "🌙 Dark Mode" : "☀️ Light Mode";
@@ -772,9 +887,7 @@
       applyFilters();
     }
 
-    /* Apply Sandbox Attribute to Block Iframe Redirects */
     function applyIframeSandbox(iframeEl) {
-      // Recreating the iframe guarantees browsers re-evaluate sandbox rules cleanly
       const parent = iframeEl.parentNode;
       const fresh = document.createElement("iframe");
       fresh.id = "video-frame";
@@ -1152,7 +1265,6 @@
       } else if (settings.maturity === "STANDARD") {
         mediaArgs.push("isAdult: false");
       }
-      // MATURE allows both isAdult true & false
     }
 
     function filterByMaturityClient(list) {
@@ -1715,15 +1827,16 @@
       document.getElementById("player-section").style.display = "none";
     }
 
-    // Boot VexinStream v5
+    // Boot VexinStream v5.1
     (async function init() {
       applySettingsUI();
+      initPWA();
       checkFirstVisitMaturity();
       initFilters();
       await handleOAuthRedirect();
       updateAuthUI();
       renderContinueWatching();
-      logMsg("VexinStream v5 (by VenixRyzen) initialized.");
+      logMsg("VexinStream v5.1 PWA (by VenixRyzen) initialized.");
       switchTab("TRENDING");
     })();
   </script>
