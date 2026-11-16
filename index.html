@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <title>VexinStream — Watch Anime Free | by VenixRyzen</title>
-  <!-- Embedded SVG Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%237c5cff'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23090a0f'/%3E%3Cpath d='M16 16 L32 48 L48 16 H39 L32 32 L25 16 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
@@ -12,8 +11,7 @@
       --bg: #08090e;
       --surface: #11131d;
       --surface-2: #191c2b;
-      --surface-3: #22263a;
-      --glass: rgba(17, 19, 29, 0.86);
+      --glass: rgba(17, 19, 29, 0.88);
       --text: #f3f4f6;
       --muted: #9ca3af;
       --border: #25293d;
@@ -22,7 +20,6 @@
       --warn: #f59e0b;
       --err: #ef4444;
 
-      /* Default Accent: Vexin Purple */
       --accent: #7c5cff;
       --accent-hover: #9175ff;
       --accent-soft: rgba(124, 92, 255, 0.16);
@@ -33,15 +30,13 @@
       --bg: #f3f5fa;
       --surface: #ffffff;
       --surface-2: #eef1f8;
-      --surface-3: #e2e7f3;
-      --glass: rgba(255, 255, 255, 0.88);
+      --glass: rgba(255, 255, 255, 0.9);
       --text: #111827;
       --muted: #4b5563;
       --border: #d8dfed;
       --shadow: 0 10px 28px rgba(17, 24, 39, 0.08);
     }
 
-    /* Accent Color Presets */
     [data-accent="purple"]  { --accent: #7c5cff; --accent-hover: #9175ff; --accent-soft: rgba(124, 92, 255, 0.16); --accent-glow: rgba(124, 92, 255, 0.35); }
     [data-accent="cyan"]    { --accent: #06b6d4; --accent-hover: #22d3ee; --accent-soft: rgba(6, 182, 212, 0.16);  --accent-glow: rgba(6, 182, 212, 0.35); }
     [data-accent="crimson"] { --accent: #ef4444; --accent-hover: #f87171; --accent-soft: rgba(239, 68, 68, 0.16);  --accent-glow: rgba(239, 68, 68, 0.35); }
@@ -52,7 +47,6 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; transition: background 0.2s, color 0.2s; overflow-x: hidden; }
 
-    /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
@@ -69,7 +63,7 @@
       max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap;
       gap: 0.85rem; align-items: center; justify-content: space-between;
     }
-    .brand-group { display: flex; align-items: center; gap: 0.65rem; cursor: pointer; }
+    .brand-group { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; }
     .logo-mark {
       width: 34px; height: 34px; border-radius: 10px; background: var(--accent);
       display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 1.1rem;
@@ -79,7 +73,7 @@
     .logo-text span { color: var(--accent); }
     .creator-pill {
       font-size: 0.68rem; font-weight: 700; color: var(--accent); background: var(--accent-soft);
-      border: 1px solid var(--accent); padding: 0.16rem 0.5rem; border-radius: 999px; letter-spacing: 0.3px;
+      border: 1px solid var(--accent); padding: 0.16rem 0.5rem; border-radius: 999px;
     }
 
     .nav-tabs {
@@ -95,7 +89,7 @@
     .tab-btn:hover { color: var(--text); background: var(--surface-2); }
     .tab-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 
-    .nav-right { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-right { display: flex; align-items: center; gap: 0.45rem; }
     .search-box { display: flex; gap: 0.35rem; }
     input[type="text"], input[type="number"], input[type="date"], select {
       padding: 0.48rem 0.8rem; border-radius: 9px; border: 1px solid var(--border);
@@ -113,7 +107,20 @@
     button.secondary { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
     button.secondary:hover { border-color: var(--accent); }
     button.active-pill { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.shield-on { background: rgba(34, 197, 94, 0.15); border: 1px solid var(--ok); color: var(--ok); }
+    button.shield-off { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--err); color: var(--err); }
     .icon-btn { padding: 0.48rem 0.7rem; font-size: 0.95rem; }
+
+    /* First-Visit Maturity Banner */
+    #maturity-banner {
+      display: none; background: var(--surface); border-bottom: 1px solid var(--accent);
+      padding: 0.85rem 1.75rem;
+    }
+    .maturity-inner {
+      max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap;
+      gap: 0.85rem; align-items: center; justify-content: space-between;
+    }
+    .maturity-options { display: flex; gap: 0.45rem; flex-wrap: wrap; }
 
     /* Main Container */
     main { max-width: 1360px; width: 100%; margin: 0 auto; padding: 1.5rem 1.75rem; flex: 1; }
@@ -131,7 +138,8 @@
       font-size: 0.74rem; font-weight: 800; padding: 0.28rem 0.7rem; border-radius: 999px;
       margin-bottom: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .hero-title { font-size: 1.75rem; font-weight: 900; line-height: 1.18; margin-bottom: 0.55rem; }
+    .hero-title { font-size: 1.75rem; font-weight: 900; line-height: 1.18; margin-bottom: 0.35rem; }
+    .hero-sub-title { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.55rem; font-style: italic; }
     .hero-meta-line { font-size: 0.82rem; color: var(--accent); font-weight: 700; margin-bottom: 0.6rem; }
     .hero-desc {
       color: var(--muted); font-size: 0.9rem; line-height: 1.55; margin-bottom: 1.15rem;
@@ -178,6 +186,12 @@
     .ep-jump { display: flex; gap: 0.35rem; align-items: center; }
     .ep-jump input { width: 88px; padding: 0.32rem 0.55rem; font-size: 0.8rem; }
 
+    .shield-notice {
+      font-size: 0.78rem; color: var(--muted); background: var(--surface-2);
+      border: 1px solid var(--border); padding: 0.55rem 0.8rem; border-radius: 9px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+
     .anime-details-box {
       background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
       padding: 1rem 1.15rem; font-size: 0.86rem; line-height: 1.55; color: var(--muted);
@@ -188,6 +202,7 @@
       font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 6px;
       background: var(--accent-soft); color: var(--accent);
     }
+    .genre-tag.ecchi-tag { background: rgba(239, 68, 68, 0.16); color: var(--err); }
 
     /* Diagnostics Console */
     #console-drawer { display: none; }
@@ -252,18 +267,23 @@
       background: var(--accent); color: #fff; font-size: 0.68rem;
       font-weight: 800; padding: 0.18rem 0.45rem; border-radius: 6px;
     }
+    .ecchi-badge {
+      position: absolute; bottom: 4.35rem; left: 0.5rem;
+      background: rgba(239, 68, 68, 0.92); color: #fff; font-size: 0.66rem;
+      font-weight: 800; padding: 0.16rem 0.45rem; border-radius: 5px;
+    }
     .card-body { padding: 0.8rem; }
     .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .card-meta { font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; }
 
-    /* Modals (Auth & Settings) */
+    /* Modals */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
       display: none; align-items: center; justify-content: center; z-index: 100; padding: 1rem;
     }
     .modal {
       background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
-      max-width: 450px; width: 100%; padding: 1.5rem; box-shadow: var(--shadow);
+      max-width: 460px; width: 100%; padding: 1.5rem; box-shadow: var(--shadow);
       max-height: 90vh; overflow-y: auto;
     }
     .modal h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
@@ -298,7 +318,6 @@
     .footer-brand { font-size: 1rem; font-weight: 900; color: var(--text); margin-bottom: 0.35rem; }
     .footer-brand span { color: var(--accent); }
 
-    /* Mobile Optimization */
     @media (max-width: 768px) {
       header { padding: 0.65rem 1rem; }
       .header-inner { gap: 0.6rem; }
@@ -343,22 +362,37 @@
           <input type="text" id="search-input" placeholder="Search anime..." />
           <button type="submit">Go</button>
         </form>
+        <button class="secondary" id="maturity-pill-btn" onclick="openSettingsModal()" title="Content Maturity Filter">🛡️ SFW</button>
         <button class="secondary icon-btn" onclick="openSettingsModal()" title="Settings & Themes">⚙️</button>
         <button class="secondary" id="auth-btn" onclick="openAuthModal()">Sign In</button>
       </div>
     </div>
   </header>
 
+  <!-- First-Time Maturity Preference Prompt -->
+  <div id="maturity-banner">
+    <div class="maturity-inner">
+      <div style="font-size:0.86rem;">
+        <strong>🔞 Content &amp; Maturity Preference:</strong> Choose whether VexinStream should hide Ecchi / suggestive titles by default:
+      </div>
+      <div class="maturity-options">
+        <button onclick="chooseInitialMaturity('SFW')">🛡️ Safe / SFW (Hide Ecchi)</button>
+        <button class="secondary" onclick="chooseInitialMaturity('STANDARD')">Standard (Allow Ecchi)</button>
+        <button class="secondary" onclick="chooseInitialMaturity('MATURE')">18+ Mature (All)</button>
+      </div>
+    </div>
+  </div>
+
   <main>
     <!-- Watch Player -->
     <section id="player-section">
-      <div class="player-wrapper">
+      <div class="player-wrapper" id="player-wrapper">
         <div id="hls-status">
           <div id="hls-status-text">Resolving fallback stream...</div>
           <button onclick="switchToPrimaryServer()">← Back to Vidnest (Primary)</button>
         </div>
         <video id="hls-video" controls playsinline style="display:none;"></video>
-        <iframe id="video-frame" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
+        <iframe id="video-frame" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="origin"></iframe>
       </div>
 
       <div class="player-controls">
@@ -368,6 +402,7 @@
             <p id="now-playing-sub" style="color: var(--muted); font-size: 0.85rem;">Episode 1</p>
           </div>
           <div class="player-actions">
+            <button id="ad-shield-btn" class="shield-on" onclick="toggleAdShield()" title="Blocks iframe pop-ups & redirect ads">🛡️ Ad-Shield: ON</button>
             <button class="secondary" onclick="changeEpisode(-1)">← Prev</button>
             <button class="secondary" onclick="changeEpisode(1)">Next →</button>
             <button class="secondary" id="watchlist-toggle-btn" onclick="toggleWatchlist()">+ My List</button>
@@ -376,13 +411,17 @@
           </div>
         </div>
 
+        <div class="shield-notice">
+          <span><strong>🛡️ Redirect Blocker Active:</strong> Pop-up tabs &amp; ad redirects are blocked. If a server refuses to play inside the sandbox, toggle <strong>Ad-Shield</strong> off.</span>
+        </div>
+
         <div>
-          <div class="label-sm">Primary Embed Servers (Vidnest Multi-Source):</div>
+          <div class="label-sm">Multi-Source Embed Servers (Switch if a server lacks Dub or buffers):</div>
           <div class="server-bar" id="embed-server-bar"></div>
         </div>
 
         <div>
-          <div class="label-sm">Anivexa-API Fallback Servers (Experimental HLS):</div>
+          <div class="label-sm">Anivexa-API HLS Fallback Servers:</div>
           <div class="server-bar" id="api-server-bar"></div>
         </div>
 
@@ -411,6 +450,7 @@
       <div>
         <span class="hero-badge">⚡ VexinStream Spotlight • by VenixRyzen</span>
         <h1 class="hero-title" id="hero-title">Featured Anime</h1>
+        <div class="hero-sub-title" id="hero-alt-title"></div>
         <div class="hero-meta-line" id="hero-meta"></div>
         <p class="hero-desc" id="hero-desc"></p>
         <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
@@ -491,17 +531,37 @@
   <div class="modal-backdrop" id="settings-modal" onclick="if(event.target===this) closeSettingsModal()">
     <div class="modal">
       <h3>⚙️ VexinStream Settings</h3>
-      <p>Customize your viewing experience. Preferences save automatically on this device.</p>
+      <p>Customize content maturity, title language, ad blocking, and theme colors.</p>
       <div class="modal-actions">
         <div class="setting-row">
           <div>
+            <div class="setting-label">🔞 Content &amp; Maturity Filter</div>
+            <div class="setting-sub">Filter Ecchi &amp; mature anime from catalog</div>
+          </div>
+          <select id="setting-maturity" onchange="updateMaturitySetting(this.value)">
+            <option value="SFW">Safe / SFW (No Ecchi)</option>
+            <option value="STANDARD">Standard (Allow Ecchi)</option>
+            <option value="MATURE">18+ Mature (All)</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div>
             <div class="setting-label">Anime Title Language</div>
-            <div class="setting-sub">Choose English (Default) or Romaji</div>
+            <div class="setting-sub">English (with synonym fallback) or Romaji</div>
           </div>
           <select id="setting-title-lang" onchange="updateTitleLang(this.value)">
-            <option value="ENGLISH">English</option>
+            <option value="ENGLISH">English (Default)</option>
             <option value="ROMAJI">Romaji</option>
           </select>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">🛡️ Default Iframe Ad-Shield</div>
+            <div class="setting-sub">Block pop-up tabs &amp; ad redirects in player</div>
+          </div>
+          <button class="secondary" id="setting-shield-btn" onclick="toggleAdShield()">ON</button>
         </div>
 
         <div class="setting-row">
@@ -551,13 +611,25 @@
     const ANIVEXA_API_URL = "https://anivexa-api-55v6.onrender.com";
     const ANILIST_CLIENT_ID = localStorage.getItem("vexin_anilist_client_id") || "";
 
-    const ALL_GENRES = [
+    const BASE_GENRES = [
       "Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror",
       "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi",
       "Slice of Life", "Sports", "Supernatural", "Thriller"
     ];
 
-    let settings = JSON.parse(localStorage.getItem("vexin_settings") || '{"titleLang":"ENGLISH","theme":"dark","accent":"purple"}');
+    const ACCENT_HEX = {
+      purple: "7c5cff",
+      cyan: "06b6d4",
+      crimson: "ef4444",
+      emerald: "10b981",
+      amber: "f59e0b",
+      pink: "ec4899"
+    };
+
+    let settings = JSON.parse(localStorage.getItem("vexin_settings") || '{"titleLang":"ENGLISH","theme":"dark","accent":"purple","maturity":"SFW","adShield":true}');
+    if (typeof settings.adShield === "undefined") settings.adShield = true;
+    if (!settings.maturity) settings.maturity = "SFW";
+
     let selectedGenres = [];
     let currentTab = "TRENDING";
     let currentSearchTerm = "";
@@ -575,12 +647,18 @@
     let watchlist = JSON.parse(localStorage.getItem("vexin_watchlist") || "[]");
     let watchHistory = JSON.parse(localStorage.getItem("vexin_history") || "[]");
 
-    // 1. Primary Embed Servers (Vidnest Multi-Source)
+    // 1. Multi-Source Verified Embed Servers (Vidnest + Videasy + MegaPlay MAL + ZokoAnime)
     const EMBED_SERVERS = [
-      { key: "vidnest-sub",      name: "Vidnest (Sub)",         url: (id, ep) => `https://vidnest.fun/anime/${id}/${ep}/sub` },
-      { key: "vidnest-dub",      name: "Vidnest (Dub)",         url: (id, ep) => `https://vidnest.fun/anime/${id}/${ep}/dub` },
-      { key: "vidnest-pahe-sub", name: "AnimePahe Embed (Sub)", url: (id, ep) => `https://vidnest.fun/animepahe/${id}/${ep}/sub` },
-      { key: "vidnest-pahe-dub", name: "AnimePahe Embed (Dub)", url: (id, ep) => `https://vidnest.fun/animepahe/${id}/${ep}/dub` }
+      { key: "vidnest-sub",      name: "Vidnest (Sub)",         url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/sub` },
+      { key: "vidnest-dub",      name: "Vidnest (Dub)",         url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/dub` },
+      { key: "videasy-sub",      name: "Videasy (Sub)",         url: (a, ep) => `https://player.videasy.net/anime/${a.id}/${ep}?color=${ACCENT_HEX[settings.accent] || "7c5cff"}&overlay=true` },
+      { key: "videasy-dub",      name: "Videasy (Dub)",         url: (a, ep) => `https://player.videasy.net/anime/${a.id}/${ep}?dub=true&color=${ACCENT_HEX[settings.accent] || "7c5cff"}&overlay=true` },
+      { key: "vidnest-pahe-sub", name: "AnimePahe Embed (Sub)", url: (a, ep) => `https://vidnest.fun/animepahe/${a.id}/${ep}/sub` },
+      { key: "vidnest-pahe-dub", name: "AnimePahe Embed (Dub)", url: (a, ep) => `https://vidnest.fun/animepahe/${a.id}/${ep}/dub` },
+      { key: "megaplay-mal-sub", name: "MegaPlay (Sub)",        url: (a, ep) => `https://megaplay.buzz/stream/mal/${a.idMal || a.id}/${ep}/sub` },
+      { key: "megaplay-mal-dub", name: "MegaPlay (Dub)",        url: (a, ep) => `https://megaplay.buzz/stream/mal/${a.idMal || a.id}/${ep}/dub` },
+      { key: "zoko-sub",         name: "ZokoAnime (Sub)",       url: (a, ep) => `https://zokoanime.video/stream/ani/${a.id}/${ep}/sub` },
+      { key: "zoko-dub",         name: "ZokoAnime (Dub)",       url: (a, ep) => `https://zokoanime.video/stream/ani/${a.id}/${ep}/dub` }
     ];
 
     // 2. Secondary Fallback Servers via Anivexa-API
@@ -593,13 +671,37 @@
       { key: "allmanga-sub",  name: "AllManga (HLS)",  provider: "allmanga",  lang: "sub" }
     ];
 
-    /* Helper: Get English or Romaji Title Based on Settings */
+    /* Smart Title Resolver: Uses official English -> English Synonym -> Romaji */
+    function findEnglishSynonym(anime) {
+      if (!anime || !Array.isArray(anime.synonyms)) return null;
+      // Pick Latin-script synonyms that aren't identical to Romaji
+      const romajiLower = (anime.title?.romaji || "").toLowerCase();
+      const latinSynonym = anime.synonyms.find(s => {
+        if (!s || s.length < 3) return false;
+        if (s.toLowerCase() === romajiLower) return false;
+        // Must contain English letters and NO Japanese/Korean/Chinese characters
+        const hasLatin = /[a-zA-Z]{3,}/.test(s);
+        const hasCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]/.test(s);
+        return hasLatin && !hasCJK;
+      });
+      return latinSynonym || null;
+    }
+
     function getAnimeTitle(anime) {
       if (!anime || !anime.title) return "Unknown Title";
       if (settings.titleLang === "ROMAJI") {
         return anime.title.romaji || anime.title.english || "Unknown Title";
       }
-      return anime.title.english || anime.title.romaji || "Unknown Title";
+      return anime.title.english || findEnglishSynonym(anime) || anime.title.romaji || "Unknown Title";
+    }
+
+    function getAltTitle(anime) {
+      if (!anime || !anime.title) return "";
+      const primary = getAnimeTitle(anime);
+      const secondary = settings.titleLang === "ROMAJI"
+        ? (anime.title.english || findEnglishSynonym(anime))
+        : anime.title.romaji;
+      return (secondary && secondary !== primary) ? secondary : "";
     }
 
     function logMsg(msg) {
@@ -616,7 +718,7 @@
       el.style.display = el.style.display === "block" ? "none" : "block";
     }
 
-    /* Settings, Themes & Title Language */
+    /* Settings, Maturity, Ad-Shield & Themes */
     function saveSettings() {
       localStorage.setItem("vexin_settings", JSON.stringify(settings));
     }
@@ -625,10 +727,75 @@
       document.documentElement.setAttribute("data-theme", settings.theme || "dark");
       document.documentElement.setAttribute("data-accent", settings.accent || "purple");
       document.getElementById("setting-title-lang").value = settings.titleLang || "ENGLISH";
+      document.getElementById("setting-maturity").value = settings.maturity || "SFW";
       document.getElementById("setting-theme-btn").textContent = settings.theme === "dark" ? "🌙 Dark Mode" : "☀️ Light Mode";
+
+      const matLabels = { SFW: "🛡️ SFW", STANDARD: "⚡ Standard", MATURE: "🔞 18+" };
+      document.getElementById("maturity-pill-btn").textContent = matLabels[settings.maturity] || "🛡️ SFW";
+
+      const shieldBtn = document.getElementById("ad-shield-btn");
+      const settingShieldBtn = document.getElementById("setting-shield-btn");
+      if (settings.adShield) {
+        shieldBtn.className = "shield-on";
+        shieldBtn.textContent = "🛡️ Ad-Shield: ON";
+        settingShieldBtn.textContent = "ON (Blocked)";
+      } else {
+        shieldBtn.className = "shield-off";
+        shieldBtn.textContent = "⚠️ Ad-Shield: OFF";
+        settingShieldBtn.textContent = "OFF";
+      }
+
       document.querySelectorAll(".swatch").forEach(s => {
         s.classList.toggle("active", s.dataset.color === (settings.accent || "purple"));
       });
+    }
+
+    function checkFirstVisitMaturity() {
+      if (!localStorage.getItem("vexin_maturity_confirmed")) {
+        document.getElementById("maturity-banner").style.display = "block";
+      }
+    }
+
+    function chooseInitialMaturity(level) {
+      localStorage.setItem("vexin_maturity_confirmed", "true");
+      document.getElementById("maturity-banner").style.display = "none";
+      updateMaturitySetting(level);
+    }
+
+    function updateMaturitySetting(level) {
+      settings.maturity = level;
+      localStorage.setItem("vexin_maturity_confirmed", "true");
+      document.getElementById("maturity-banner").style.display = "none";
+      saveSettings();
+      applySettingsUI();
+      renderGenreChips();
+      applyFilters();
+    }
+
+    /* Apply Sandbox Attribute to Block Iframe Redirects */
+    function applyIframeSandbox(iframeEl) {
+      // Recreating the iframe guarantees browsers re-evaluate sandbox rules cleanly
+      const parent = iframeEl.parentNode;
+      const fresh = document.createElement("iframe");
+      fresh.id = "video-frame";
+      fresh.allowFullscreen = true;
+      fresh.allow = "autoplay; encrypted-media; fullscreen";
+      fresh.referrerPolicy = "origin";
+      if (settings.adShield) {
+        fresh.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-presentation");
+      }
+      parent.replaceChild(fresh, iframeEl);
+      return fresh;
+    }
+
+    function toggleAdShield() {
+      settings.adShield = !settings.adShield;
+      saveSettings();
+      applySettingsUI();
+      logMsg(`Ad-Shield ${settings.adShield ? "ENABLED (pop-ups & redirects blocked)" : "DISABLED"}.`);
+      if (currentAnime && document.getElementById("player-section").style.display !== "none") {
+        openPlayer(currentAnime, currentEp, false);
+      }
     }
 
     function openSettingsModal() {
@@ -655,7 +822,6 @@
     function updateTitleLang(lang) {
       settings.titleLang = lang;
       saveSettings();
-      // Re-render active views immediately with new title language
       if (currentHeroAnime && document.getElementById("hero-banner").style.display !== "none") {
         renderHero(currentHeroAnime);
       }
@@ -671,22 +837,18 @@
     }
 
     /* Multi-Filter Initialization */
-    function initFilters() {
-      const yearSelect = document.getElementById("year-filter");
-      const currentYear = new Date().getFullYear() + 1;
-      for (let y = currentYear; y >= 1990; y--) {
-        const opt = document.createElement("option");
-        opt.value = y;
-        opt.textContent = y;
-        yearSelect.appendChild(opt);
-      }
-
+    function renderGenreChips() {
       const drawer = document.getElementById("genre-pill-drawer");
-      ALL_GENRES.forEach(g => {
+      drawer.innerHTML = "";
+      const genres = settings.maturity === "SFW" ? BASE_GENRES : [...BASE_GENRES, "Ecchi"];
+      selectedGenres = selectedGenres.filter(g => genres.includes(g));
+      document.getElementById("genre-toggle-btn").textContent = `🏷️ Genres (${selectedGenres.length}) ▾`;
+
+      genres.forEach(g => {
         const chip = document.createElement("button");
         chip.type = "button";
-        chip.className = "genre-chip";
-        chip.textContent = g;
+        chip.className = `genre-chip ${selectedGenres.includes(g) ? "selected" : ""}`;
+        chip.textContent = g === "Ecchi" ? "🔞 Ecchi" : g;
         chip.onclick = () => {
           if (selectedGenres.includes(g)) {
             selectedGenres = selectedGenres.filter(item => item !== g);
@@ -700,6 +862,18 @@
         };
         drawer.appendChild(chip);
       });
+    }
+
+    function initFilters() {
+      const yearSelect = document.getElementById("year-filter");
+      const currentYear = new Date().getFullYear() + 1;
+      for (let y = currentYear; y >= 1990; y--) {
+        const opt = document.createElement("option");
+        opt.value = y;
+        opt.textContent = y;
+        yearSelect.appendChild(opt);
+      }
+      renderGenreChips();
     }
 
     function toggleGenreDrawer() {
@@ -955,18 +1129,41 @@
 
     const MEDIA_FIELDS = `
       id
+      idMal
       episodes
       averageScore
       seasonYear
       format
       status
       genres
+      synonyms
+      isAdult
       description(asHtml: false)
       nextAiringEpisode { episode airingAt }
       studios(isMain: true) { nodes { name } }
       title { english romaji }
       coverImage { large extraLarge }
     `;
+
+    function applyMaturityArgs(mediaArgs) {
+      if (settings.maturity === "SFW") {
+        mediaArgs.push("isAdult: false");
+        mediaArgs.push('genre_not_in: ["Ecchi", "Hentai"]');
+      } else if (settings.maturity === "STANDARD") {
+        mediaArgs.push("isAdult: false");
+      }
+      // MATURE allows both isAdult true & false
+    }
+
+    function filterByMaturityClient(list) {
+      if (settings.maturity === "SFW") {
+        return list.filter(a => !a.isAdult && !(a.genres || []).includes("Ecchi"));
+      }
+      if (settings.maturity === "STANDARD") {
+        return list.filter(a => !a.isAdult);
+      }
+      return list;
+    }
 
     /* Navigation Tabs & Multi-Filter Logic */
     function resetHome() {
@@ -1002,7 +1199,7 @@
       document.getElementById("clear-filters-btn").style.display = hasActiveFilters() ? "inline-block" : "none";
 
       if (currentTab === "WATCHLIST") {
-        const filtered = watchlist.filter(a => {
+        const filtered = filterByMaturityClient(watchlist).filter(a => {
           const matchGenres = selectedGenres.every(g => a.genres && a.genres.includes(g));
           const matchYear = !year || Number(a.seasonYear) === Number(year);
           const matchFormat = !format || a.format === format;
@@ -1059,7 +1256,8 @@
       let heading = "Trending Now";
       const variables = {};
       const argDefs = [];
-      const mediaArgs = ["type: ANIME", `sort: ${sort}`, "isAdult: false"];
+      const mediaArgs = ["type: ANIME", `sort: ${sort}`];
+      applyMaturityArgs(mediaArgs);
 
       if (tab === "AIRING") {
         sort = "POPULARITY_DESC";
@@ -1112,7 +1310,7 @@
         }`;
 
       const data = await fetchAniList(query, variables);
-      const list = data.Page.media;
+      const list = filterByMaturityClient(data.Page.media || []);
       lastLoadedList = list;
       document.getElementById("result-count").textContent = `${list.length} titles`;
 
@@ -1128,10 +1326,13 @@
       currentHeroAnime = anime;
       const hero = document.getElementById("hero-banner");
       const title = getAnimeTitle(anime);
+      const altTitle = getAltTitle(anime);
       const cleanDesc = (anime.description || "Stream in HD on VexinStream.").replace(/<[^>]*>/g, "");
       const score = anime.averageScore ? `★ ${(anime.averageScore / 10).toFixed(1)}` : "Trending";
       const genres = (anime.genres || []).slice(0, 3).join(" • ");
+
       document.getElementById("hero-title").textContent = title;
+      document.getElementById("hero-alt-title").textContent = altTitle;
       document.getElementById("hero-meta").textContent = `${score} • ${anime.format || "TV"} • ${anime.seasonYear || "2026"} ${genres ? "• " + genres : ""}`;
       document.getElementById("hero-desc").textContent = cleanDesc;
       document.getElementById("hero-poster").src = anime.coverImage.extraLarge || anime.coverImage.large;
@@ -1162,7 +1363,8 @@
 
       const variables = { search: term };
       const argDefs = ["$search: String"];
-      const mediaArgs = ["type: ANIME", "search: $search", "sort: POPULARITY_DESC", "isAdult: false"];
+      const mediaArgs = ["type: ANIME", "search: $search", "sort: POPULARITY_DESC"];
+      applyMaturityArgs(mediaArgs);
 
       if (selectedGenres.length > 0) {
         argDefs.push("$genres: [String]");
@@ -1195,7 +1397,7 @@
           }
         }`;
       const data = await fetchAniList(query, variables);
-      const list = data.Page.media;
+      const list = filterByMaturityClient(data.Page.media || []);
       lastLoadedList = list;
       document.getElementById("result-count").textContent = `${list.length} matches`;
       renderGrid(list);
@@ -1203,16 +1405,18 @@
 
     async function playRandomAnime() {
       const randomPage = Math.floor(Math.random() * 15) + 1;
+      const mediaArgs = ["type: ANIME", "sort: POPULARITY_DESC"];
+      applyMaturityArgs(mediaArgs);
       const query = `
         query ($page: Int) {
           Page(page: $page, perPage: 20) {
-            media(type: ANIME, sort: POPULARITY_DESC, isAdult: false) {
+            media(${mediaArgs.join(", ")}) {
               ${MEDIA_FIELDS}
             }
           }
         }`;
       const data = await fetchAniList(query, { page: randomPage });
-      const pool = data.Page.media || [];
+      const pool = filterByMaturityClient(data.Page.media || []);
       if (pool.length > 0) {
         const pick = pool[Math.floor(Math.random() * pool.length)];
         openPlayer(pick, 1);
@@ -1223,18 +1427,20 @@
       const grid = document.getElementById("anime-grid");
       grid.innerHTML = "";
       if (!list || list.length === 0) {
-        grid.innerHTML = `<p style="color:var(--muted); grid-column:1/-1;">No anime found matching these filters.</p>`;
+        grid.innerHTML = `<p style="color:var(--muted); grid-column:1/-1;">No anime found matching your current filters or maturity level.</p>`;
         return;
       }
       list.forEach(anime => {
         const title = getAnimeTitle(anime);
         const totalEps = anime.episodes || (anime.nextAiringEpisode ? anime.nextAiringEpisode.episode - 1 : "?");
         const score = anime.averageScore ? `★ ${(anime.averageScore / 10).toFixed(1)}` : "";
+        const isEcchi = (anime.genres || []).includes("Ecchi");
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
           ${score ? `<div class="score-badge">${score}</div>` : ""}
           <div class="format-badge">${anime.format || "TV"}</div>
+          ${isEcchi ? `<div class="ecchi-badge">ECCHI</div>` : ""}
           <img src="${anime.coverImage.large}" alt="${title}" loading="lazy" />
           <div class="card-body">
             <div class="card-title">${title}</div>
@@ -1285,14 +1491,14 @@
               airingAt
               episode
               media {
-                isAdult
                 ${MEDIA_FIELDS}
               }
             }
           }
         }`;
       const data = await fetchAniList(query, { start: startSec, end: endSec });
-      lastScheduleItems = (data.Page.airingSchedules || []).filter(s => s.media && !s.media.isAdult);
+      const raw = (data.Page.airingSchedules || []).filter(s => s.media);
+      lastScheduleItems = raw.filter(s => filterByMaturityClient([s.media]).length > 0);
       renderScheduleItems(lastScheduleItems);
     }
 
@@ -1300,7 +1506,7 @@
       const listEl = document.getElementById("schedule-list");
       listEl.innerHTML = "";
       if (!items || items.length === 0) {
-        listEl.innerHTML = `<p style="color:var(--muted);">No scheduled releases found for this date.</p>`;
+        listEl.innerHTML = `<p style="color:var(--muted);">No scheduled releases found for this date (under your current maturity filter).</p>`;
         return;
       }
 
@@ -1322,7 +1528,7 @@
       });
     }
 
-    /* Player + Anivexa-API Fallback Logic */
+    /* Player + Ad-Shield Sandbox + Anivexa-API Fallback Logic */
     function stopMedia() {
       const video = document.getElementById("hls-video");
       const iframe = document.getElementById("video-frame");
@@ -1331,14 +1537,16 @@
       video.pause();
       video.removeAttribute("src");
       video.style.display = "none";
-      iframe.src = "";
-      iframe.style.display = "none";
+      if (iframe) {
+        iframe.src = "";
+        iframe.style.display = "none";
+      }
       hlsStatus.style.display = "none";
     }
 
     function switchToPrimaryServer() {
       activeServerKey = "vidnest-sub";
-      if (currentAnime) openPlayer(currentAnime, currentEp);
+      if (currentAnime) openPlayer(currentAnime, currentEp, false);
     }
 
     async function playAnivexaFallback(serverObj, anime, ep) {
@@ -1356,7 +1564,6 @@
         let srcRes = await fetch(endpoint);
         let srcData = await srcRes.json();
 
-        // Title-search fallback if AniList ID isn't mapped on backend
         if ((!srcRes.ok || srcData.error) && cleanTitle) {
           logMsg(`AniList ID unmapped on ${serverObj.provider}, searching by title...`);
           const searchRes = await fetch(`${ANIVEXA_API_URL}/search/${serverObj.provider}?q=${encodeURIComponent(cleanTitle)}`);
@@ -1413,15 +1620,16 @@
       saveWatchProgress(anime, currentEp);
 
       const title = getAnimeTitle(anime);
+      const altTitle = getAltTitle(anime);
       const totalEps = anime.episodes || (anime.nextAiringEpisode ? anime.nextAiringEpisode.episode - 1 : 24) || 12;
       const studio = anime.studios?.nodes?.[0]?.name || "Unknown Studio";
       const score = anime.averageScore ? `${(anime.averageScore / 10).toFixed(1)} / 10` : "N/A";
       const cleanDesc = (anime.description || "No synopsis available.").replace(/<[^>]*>/g, "");
-      const genreHtml = (anime.genres || []).map(g => `<span class="genre-tag">${g}</span>`).join("");
+      const genreHtml = (anime.genres || []).map(g => `<span class="genre-tag ${g === "Ecchi" ? "ecchi-tag" : ""}">${g}</span>`).join("");
 
       document.getElementById("player-section").style.display = "block";
       document.getElementById("now-playing-title").textContent = title;
-      document.getElementById("now-playing-sub").textContent = `Episode ${currentEp} • ${anime.format || "TV"} • Score: ${score} • Studio: ${studio}`;
+      document.getElementById("now-playing-sub").textContent = `${altTitle ? altTitle + " • " : ""}Episode ${currentEp} • ${anime.format || "TV"} • Score: ${score} • Studio: ${studio}`;
       document.getElementById("anime-synopsis").innerHTML = `
         <strong>Synopsis:</strong> ${cleanDesc}
         ${genreHtml ? `<div class="genre-tags">${genreHtml}</div>` : ""}
@@ -1459,14 +1667,15 @@
         playAnivexaFallback(apiMatch, anime, currentEp);
       } else {
         const selected = EMBED_SERVERS.find(s => s.key === activeServerKey) || EMBED_SERVERS[0];
-        const url = selected.url(anime.id, currentEp);
-        logMsg(`Loading [${selected.name}] -> ${url}`);
-        const iframe = document.getElementById("video-frame");
-        iframe.style.display = "block";
-        iframe.src = url;
+        const url = selected.url(anime, currentEp);
+        logMsg(`Loading [${selected.name}] (Ad-Shield: ${settings.adShield ? "ON" : "OFF"}) -> ${url}`);
+        const currentFrame = document.getElementById("video-frame");
+        const activeFrame = applyIframeSandbox(currentFrame);
+        activeFrame.style.display = "block";
+        activeFrame.src = url;
       }
 
-      // Render Mobile-Friendly Episode Grid (Chunks large series like One Piece)
+      // Render Mobile-Friendly Episode Grid
       const epGrid = document.getElementById("episode-grid");
       epGrid.innerHTML = "";
       const limit = showAllEpisodes ? totalEps : Math.min(totalEps, 100);
@@ -1506,14 +1715,15 @@
       document.getElementById("player-section").style.display = "none";
     }
 
-    // Boot VexinStream v4
+    // Boot VexinStream v5
     (async function init() {
       applySettingsUI();
+      checkFirstVisitMaturity();
       initFilters();
       await handleOAuthRedirect();
       updateAuthUI();
       renderContinueWatching();
-      logMsg("VexinStream v4 (by VenixRyzen) initialized.");
+      logMsg("VexinStream v5 (by VenixRyzen) initialized.");
       switchTab("TRENDING");
     })();
   </script>
