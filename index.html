@@ -1100,8 +1100,12 @@
        Leave blank to keep VexinStream fully functional in local-only
        mode (XP / leaderboard / cloud profile simply stay dormant).
        ============================================================ */
-    const SUPABASE_URL = "";       // e.g. "https://vcluslrajxsgwkporcqq.supabase.co"
-    const SUPABASE_ANON_KEY = "";  // e.g. "sb_publishable_rw52jeNwyNvzLkb-zVXBLQ_NYENSgWS"
+const ANILIST_API = "https://graphql.anilist.co";
+const ANIVEXA_API_URL = "https://anivexa-api-55v6.onrender.com";
+const ANILIST_CLIENT_ID = localStorage.getItem("vexin_anilist_client_id") || "";
+
+const SUPABASE_URL = "https://vcluslrajxsgwkporcqq.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_rw52jeNwyNvzLkb-zVXBLQ_NYENSgWS";
 
     let supabaseClient = null;
     const SUPABASE_ENABLED = (() => {
