@@ -1,0 +1,3436 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="purple">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <title>VexinStream — Watch Anime Free | by VenixRyzen</title>
+  <meta name="description" content="Stream trending, airing, and classic anime free in HD with multi-source servers, Ad-Shield protection, and AniList sync. Created by VenixRyzen." />
+
+  <!-- Open Graph & Discord / WhatsApp Embed Card Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VexinStream" />
+  <meta property="og:title" id="og-title" content="VexinStream — Watch Anime Free | by VenixRyzen" />
+  <meta property="og:description" id="og-description" content="Multi-source anime streaming web app with Ad-Shield, Brave optimization, AniList auto-sync, and PWA install support. Created by VenixRyzen." />
+  <meta property="og:image" id="og-image" content="https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" id="twitter-title" content="VexinStream — Watch Anime Free | by VenixRyzen" />
+  <meta name="twitter:description" id="twitter-description" content="Multi-source anime streaming web app with Ad-Shield, AniList auto-sync, and PWA support." />
+  <meta name="twitter:image" id="twitter-image" content="https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg" />
+
+  <!-- PWA Manifest & Mobile App Meta Tags -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" id="meta-theme-color" content="#7c5cff" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VexinStream" />
+
+  <!-- Favicon & Apple Touch Icon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%237c5cff'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23090a0f'/%3E%3Cpath d='M16 16 L32 48 L48 16 H39 L32 32 L25 16 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%237c5cff'/%3E%3Cstop offset='100%25' stop-color='%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='40' fill='%2308090e'/%3E%3Cpath d='M45 45 L90 135 L135 45 H110 L90 90 L70 45 Z' fill='url(%23g)'/%3E%3C/svg%3E" />
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --bg: #08090e;
+      --surface: #11131d;
+      --surface-2: #191c2b;
+      --glass: rgba(17, 19, 29, 0.88);
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --border: #25293d;
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.48);
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --err: #ef4444;
+
+      --accent: #7c5cff;
+      --accent-hover: #9175ff;
+      --accent-soft: rgba(124, 92, 255, 0.16);
+      --accent-glow: rgba(124, 92, 255, 0.35);
+    }
+
+    [data-theme="light"] {
+      --bg: #f3f5fa;
+      --surface: #ffffff;
+      --surface-2: #eef1f8;
+      --glass: rgba(255, 255, 255, 0.9);
+      --text: #111827;
+      --muted: #4b5563;
+      --border: #d8dfed;
+      --shadow: 0 10px 28px rgba(17, 24, 39, 0.08);
+    }
+
+    [data-accent="purple"]  { --accent: #7c5cff; --accent-hover: #9175ff; --accent-soft: rgba(124, 92, 255, 0.16); --accent-glow: rgba(124, 92, 255, 0.35); }
+    [data-accent="cyan"]    { --accent: #06b6d4; --accent-hover: #22d3ee; --accent-soft: rgba(6, 182, 212, 0.16);  --accent-glow: rgba(6, 182, 212, 0.35); }
+    [data-accent="crimson"] { --accent: #ef4444; --accent-hover: #f87171; --accent-soft: rgba(239, 68, 68, 0.16);  --accent-glow: rgba(239, 68, 68, 0.35); }
+    [data-accent="emerald"] { --accent: #10b981; --accent-hover: #34d399; --accent-soft: rgba(16, 185, 129, 0.16); --accent-glow: rgba(16, 185, 129, 0.35); }
+    [data-accent="amber"]   { --accent: #f59e0b; --accent-hover: #fbbf24; --accent-soft: rgba(245, 158, 11, 0.16); --accent-glow: rgba(245, 158, 11, 0.35); }
+    [data-accent="pink"]    { --accent: #ec4899; --accent-hover: #f472b6; --accent-soft: rgba(236, 72, 153, 0.16); --accent-glow: rgba(236, 72, 153, 0.35); }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column;
+      transition: background 0.2s, color 0.2s; overflow-x: hidden;
+      padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    /* Header & Navigation */
+    header {
+      position: sticky; top: 0; z-index: 60;
+      background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.75rem; box-shadow: var(--shadow);
+    }
+    .header-inner {
+      max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap;
+      gap: 0.85rem; align-items: center; justify-content: space-between;
+    }
+    .brand-group { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; flex-wrap: wrap; }
+    .logo-mark {
+      width: 34px; height: 34px; border-radius: 10px; background: var(--accent);
+      display: grid; place-items: center; color: #fff; font-weight: 900; font-size: 1.1rem;
+      box-shadow: 0 4px 14px var(--accent-glow); flex-shrink: 0;
+    }
+    .logo-text { font-size: 1.35rem; font-weight: 900; letter-spacing: -0.6px; line-height: 1; }
+    .logo-text span { color: var(--accent); }
+    .creator-pill {
+      font-size: 0.68rem; font-weight: 700; color: var(--accent); background: var(--accent-soft);
+      border: 1px solid var(--accent); padding: 0.16rem 0.5rem; border-radius: 999px;
+    }
+    .brave-badge {
+      display: none; font-size: 0.68rem; font-weight: 700; color: var(--ok);
+      background: rgba(34, 197, 94, 0.14); border: 1px solid var(--ok);
+      padding: 0.16rem 0.55rem; border-radius: 999px;
+    }
+
+    .nav-tabs {
+      display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none;
+      -webkit-overflow-scrolling: touch; max-width: 100%;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: transparent; color: var(--muted); border: 1px solid transparent;
+      padding: 0.45rem 0.8rem; border-radius: 9px; font-weight: 600; font-size: 0.85rem;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); background: var(--surface-2); }
+    .tab-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+
+    .nav-right { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+    .search-box { display: flex; gap: 0.35rem; }
+    input[type="text"], input[type="number"], input[type="date"], input[type="email"], input[type="password"], select {
+      padding: 0.48rem 0.8rem; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text); outline: none; font-size: 0.86rem;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    select { cursor: pointer; }
+
+    button {
+      padding: 0.5rem 0.9rem; border-radius: 9px; border: none;
+      background: var(--accent); color: #fff; font-weight: 600; cursor: pointer;
+      transition: 0.15s; white-space: nowrap; font-size: 0.85rem;
+    }
+    button:hover { background: var(--accent-hover); }
+    button.secondary { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); }
+    button.secondary:hover { border-color: var(--accent); }
+    button.active-pill { background: var(--accent); border-color: var(--accent); color: #fff; }
+    button.shield-on { background: rgba(34, 197, 94, 0.15); border: 1px solid var(--ok); color: var(--ok); }
+    button.shield-off { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--err); color: var(--err); }
+    button.install-btn {
+      display: none; background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent);
+    }
+    button.install-btn:hover { background: var(--accent); color: #fff; }
+    .icon-btn { padding: 0.48rem 0.7rem; font-size: 0.95rem; }
+
+    /* First-Visit Maturity Banner */
+    #maturity-banner {
+      display: none; background: var(--surface); border-bottom: 1px solid var(--accent);
+      padding: 0.85rem 1.75rem;
+    }
+    .maturity-inner {
+      max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap;
+      gap: 0.85rem; align-items: center; justify-content: space-between;
+    }
+    .maturity-options { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+
+    /* Main Container */
+    main { max-width: 1360px; width: 100%; margin: 0 auto; padding: 1.5rem 1.75rem; flex: 1; }
+
+    /* Hero Spotlight */
+    #hero-banner {
+      position: relative; border-radius: 18px; overflow: hidden; margin-bottom: 1.85rem;
+      border: 1px solid var(--border); background: var(--surface);
+      display: grid; grid-template-columns: 1fr 215px; gap: 1.5rem; padding: 1.85rem;
+      align-items: center; box-shadow: var(--shadow);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--accent-soft); color: var(--accent);
+      font-size: 0.74rem; font-weight: 800; padding: 0.28rem 0.7rem; border-radius: 999px;
+      margin-bottom: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .hero-title { font-size: 1.75rem; font-weight: 900; line-height: 1.18; margin-bottom: 0.35rem; }
+    .hero-sub-title { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.55rem; font-style: italic; }
+    .hero-meta-line { font-size: 0.82rem; color: var(--accent); font-weight: 700; margin-bottom: 0.6rem; }
+    .hero-desc {
+      color: var(--muted); font-size: 0.9rem; line-height: 1.55; margin-bottom: 1.15rem;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .hero-poster { width: 100%; border-radius: 12px; aspect-ratio: 2/3; object-fit: cover; box-shadow: var(--shadow); }
+
+    /* Continue Watching Bar */
+    #continue-section { display: none; margin-bottom: 2rem; }
+    .cw-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0.85rem; }
+    .cw-card {
+      position: relative; overflow: hidden;
+      display: flex; gap: 0.75rem; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 0.6rem 0.6rem 0.72rem; cursor: pointer; transition: 0.15s;
+    }
+    .cw-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .cw-card img { width: 48px; height: 68px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .cw-info { flex: 1; min-width: 0; }
+    .cw-title { font-size: 0.88rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.2rem; }
+    .cw-ep { font-size: 0.76rem; color: var(--accent); font-weight: 700; }
+    .cw-progress-track {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--surface-2);
+    }
+    .cw-progress-fill { height: 100%; background: var(--accent); }
+    .cw-remove { background: transparent; color: var(--muted); padding: 0.25rem 0.45rem; font-size: 0.8rem; border-radius: 6px; }
+    .cw-remove:hover { background: var(--surface-2); color: var(--err); }
+
+    /* Watch Player Section */
+    #player-section {
+      display: none; margin-bottom: 2.25rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 18px; overflow: hidden; box-shadow: var(--shadow);
+    }
+    .player-wrapper { position: relative; width: 100%; padding-top: 56.25%; background: #000; }
+    .player-wrapper iframe, .player-wrapper video { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    #hls-status {
+      position: absolute; inset: 0; display: none; flex-direction: column; gap: 0.75rem;
+      align-items: center; justify-content: center; background: rgba(8, 9, 14, 0.92);
+      color: var(--text); font-size: 0.92rem; padding: 1.5rem; text-align: center; z-index: 5;
+    }
+    .player-controls { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.95rem; }
+    .player-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+    .player-actions { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+    .label-sm { font-size: 0.74rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; }
+    .server-bar, .ep-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .ep-grid { max-height: 180px; overflow-y: auto; padding-top: 0.55rem; border-top: 1px solid var(--border); }
+    .ep-btn { padding: 0.38rem 0.7rem; font-size: 0.8rem; }
+    .ep-header-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .ep-jump { display: flex; gap: 0.35rem; align-items: center; }
+    .ep-jump input { width: 88px; padding: 0.32rem 0.55rem; font-size: 0.8rem; }
+
+    .shield-notice {
+      font-size: 0.78rem; color: var(--muted); background: var(--surface-2);
+      border: 1px solid var(--border); padding: 0.55rem 0.85rem; border-radius: 9px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .adblock-recommend {
+      display: none; font-size: 0.78rem; color: var(--warn);
+      background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.45);
+      padding: 0.55rem 0.85rem; border-radius: 9px; line-height: 1.45;
+    }
+    .adblock-recommend a { color: var(--accent); font-weight: 700; text-decoration: underline; }
+    .hotkey-bar {
+      display: none; font-size: 0.75rem; color: var(--muted); background: var(--surface-2);
+      border: 1px solid var(--border); padding: 0.45rem 0.8rem; border-radius: 8px;
+    }
+    .hotkey-bar kbd {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+      padding: 0.1rem 0.38rem; font-family: monospace; font-size: 0.72rem; color: var(--text);
+    }
+    .sync-toast {
+      display: inline-block; font-size: 0.74rem; font-weight: 700; color: var(--ok);
+      margin-left: 0.5rem;
+    }
+
+    .anime-details-box {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1rem 1.15rem; font-size: 0.86rem; line-height: 1.55; color: var(--muted);
+    }
+    .anime-details-box strong { color: var(--text); }
+    .genre-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.65rem; }
+    .genre-tag {
+      font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 6px;
+      background: var(--accent-soft); color: var(--accent);
+    }
+    .genre-tag.ecchi-tag { background: rgba(239, 68, 68, 0.16); color: var(--err); }
+
+    /* Diagnostics Console */
+    #console-drawer { display: none; }
+    .console-box {
+      background: #07080c; color: #93c5fd; border: 1px solid var(--border); border-radius: 9px;
+      padding: 0.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.76rem; max-height: 140px; overflow-y: auto; line-height: 1.45;
+    }
+
+    /* Schedule View */
+    #schedule-section { display: none; margin-bottom: 2rem; }
+    .schedule-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center; justify-content: space-between;
+      background: var(--surface); border: 1px solid var(--border); padding: 1rem 1.2rem;
+      border-radius: 14px; margin-bottom: 1.25rem;
+    }
+    .schedule-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0.95rem; }
+    .sched-card {
+      display: flex; gap: 0.85rem; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.8rem; align-items: center; cursor: pointer; transition: 0.15s;
+    }
+    .sched-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .sched-card img { width: 56px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+    .sched-time { font-size: 0.76rem; font-weight: 800; color: var(--accent); margin-bottom: 0.2rem; }
+    .sched-title { font-size: 0.9rem; font-weight: 700; line-height: 1.3; margin-bottom: 0.2rem; }
+    .sched-ep { font-size: 0.78rem; color: var(--muted); }
+
+    /* Multi-Filter Toolbar & Catalog Grid */
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem; }
+    .section-header h2 { font-size: 1.28rem; font-weight: 900; }
+
+    .multi-filter-bar {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 0.85rem 1rem; margin-bottom: 1.35rem; display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .filter-controls-row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .genre-pill-drawer {
+      display: none; flex-wrap: wrap; gap: 0.4rem; padding-top: 0.65rem; border-top: 1px solid var(--border);
+    }
+    .genre-pill-drawer.open { display: flex; }
+    .genre-chip {
+      padding: 0.34rem 0.7rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
+      background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); cursor: pointer;
+    }
+    .genre-chip:hover { border-color: var(--accent); color: var(--text); }
+    .genre-chip.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.15rem; }
+    .card {
+      position: relative; background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: var(--shadow); }
+    .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; background: var(--surface-2); }
+    .score-badge {
+      position: absolute; top: 0.5rem; left: 0.5rem;
+      background: rgba(8, 9, 14, 0.82); color: #fbbf24; font-size: 0.72rem;
+      font-weight: 800; padding: 0.2rem 0.48rem; border-radius: 6px; backdrop-filter: blur(4px);
+    }
+    .format-badge {
+      position: absolute; top: 0.5rem; right: 0.5rem;
+      background: var(--accent); color: #fff; font-size: 0.68rem;
+      font-weight: 800; padding: 0.18rem 0.45rem; border-radius: 6px;
+    }
+    .ecchi-badge {
+      position: absolute; bottom: 4.35rem; left: 0.5rem;
+      background: rgba(239, 68, 68, 0.92); color: #fff; font-size: 0.66rem;
+      font-weight: 800; padding: 0.16rem 0.45rem; border-radius: 5px;
+    }
+    .card-body { padding: 0.8rem; }
+    .card-title { font-size: 0.92rem; font-weight: 700; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .card-meta { font-size: 0.76rem; color: var(--muted); margin-top: 0.35rem; }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 100; padding: 1rem;
+    }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+      max-width: 470px; width: 100%; padding: 1.5rem; box-shadow: var(--shadow);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .modal p { color: var(--muted); font-size: 0.86rem; line-height: 1.5; margin-bottom: 1rem; }
+    .modal-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+    .setting-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+      background: var(--surface-2); border: 1px solid var(--border); padding: 0.75rem 0.9rem; border-radius: 12px;
+    }
+    .setting-label { font-size: 0.88rem; font-weight: 700; }
+    .setting-sub { font-size: 0.75rem; color: var(--muted); }
+    .swatch-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .swatch {
+      width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;
+      transition: transform 0.15s;
+    }
+    .swatch:hover { transform: scale(1.12); }
+    .swatch.active { border-color: #fff; box-shadow: 0 0 0 2px var(--accent); }
+    .oauth-hint {
+      font-size: 0.76rem; color: var(--muted); background: var(--surface-2);
+      border: 1px solid var(--border); padding: 0.65rem; border-radius: 9px; line-height: 1.45;
+    }
+    .oauth-hint code { color: var(--accent); font-family: monospace; word-break: break-all; }
+    .ios-step {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.7rem 0.85rem; font-size: 0.85rem; line-height: 1.45;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border); padding: 1.75rem 1.5rem;
+      text-align: center; color: var(--muted); font-size: 0.84rem; background: var(--surface);
+      margin-top: 2rem;
+    }
+    footer strong { color: var(--text); }
+    .footer-brand { font-size: 1rem; font-weight: 900; color: var(--text); margin-bottom: 0.35rem; }
+    .footer-brand span { color: var(--accent); }
+
+    /* ============================================================
+       v7.0 — Supabase Accounts, XP Leveling, Cosmetics & Leaderboard
+       ============================================================ */
+
+    /* Header user pill (level + styled name + equipped title) */
+    .user-pill {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.32rem 0.6rem; border-radius: 999px;
+      background: var(--accent-soft); border: 1px solid var(--accent);
+      color: var(--text); max-width: 300px;
+    }
+    .user-pill:hover { background: var(--surface-2); }
+    .up-level {
+      font-size: 0.64rem; font-weight: 900; letter-spacing: 0.3px;
+      background: var(--accent); color: #fff; padding: 0.14rem 0.42rem; border-radius: 999px;
+      flex-shrink: 0;
+    }
+    .up-name {
+      font-size: 0.82rem; font-weight: 800; max-width: 130px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .up-title {
+      font-size: 0.62rem; font-weight: 800; color: var(--accent);
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.1rem 0.4rem; border-radius: 999px; white-space: nowrap;
+    }
+
+    /* Toast stack + XP / level-up celebration */
+    #toast-stack {
+      position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+      z-index: 200; display: flex; flex-direction: column; gap: 0.5rem;
+      align-items: flex-end; pointer-events: none;
+    }
+    .xp-toast {
+      display: flex; align-items: center; gap: 0.6rem; max-width: 330px;
+      background: var(--surface); border: 1px solid var(--accent); border-left: 4px solid var(--accent);
+      border-radius: 12px; padding: 0.7rem 0.95rem; box-shadow: var(--shadow);
+      font-size: 0.84rem; line-height: 1.35; pointer-events: auto;
+      animation: toastIn 0.3s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+    }
+    .xp-toast.err { border-color: var(--err); border-left-color: var(--err); }
+    .xp-toast.ok { border-color: var(--ok); border-left-color: var(--ok); }
+    .xp-toast strong { color: var(--accent); }
+    .xp-toast.err strong { color: var(--err); }
+    .xp-toast.ok strong { color: var(--ok); }
+    .xp-toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .xp-toast.out { animation: toastOut 0.32s ease both; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(14px) scale(0.96); } to { opacity: 1; transform: none; } }
+    @keyframes toastOut { to { opacity: 0; transform: translateY(10px) scale(0.97); } }
+
+    .levelup-banner {
+      position: fixed; left: 50%; top: calc(1rem + env(safe-area-inset-top));
+      transform: translateX(-50%); z-index: 210; width: min(92vw, 470px);
+      border-radius: 16px; padding: 1.1rem 1.25rem; color: #fff; text-align: center;
+      background: linear-gradient(135deg, #7c5cff 0%, #ec4899 55%, #f59e0b 100%);
+      box-shadow: 0 18px 50px rgba(124, 92, 255, 0.5);
+      animation: levelPop 0.5s cubic-bezier(0.2, 1.3, 0.4, 1) both; overflow: hidden;
+    }
+    .levelup-banner.out { animation: levelPopOut 0.4s ease both; }
+    .levelup-banner::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.5) 50%, transparent 70%);
+      transform: translateX(-130%); animation: shineSweep 1.5s ease 0.25s;
+    }
+    .lu-kicker { font-size: 0.68rem; font-weight: 900; letter-spacing: 1.4px; text-transform: uppercase; opacity: 0.92; }
+    .lu-title { font-size: 1.55rem; font-weight: 900; margin: 0.1rem 0 0.15rem; }
+    .lu-sub { font-size: 0.8rem; opacity: 0.95; margin-bottom: 0.55rem; }
+    .lu-unlocks { display: flex; flex-wrap: wrap; gap: 0.3rem; justify-content: center; }
+    .lu-chip {
+      font-size: 0.68rem; font-weight: 800; background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.45); padding: 0.18rem 0.5rem; border-radius: 999px;
+    }
+    @keyframes levelPop { from { opacity: 0; transform: translateX(-50%) translateY(-18px) scale(0.92); } to { opacity: 1; transform: translateX(-50%) scale(1); } }
+    @keyframes levelPopOut { to { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(0.96); } }
+    @keyframes shineSweep { to { transform: translateX(130%); } }
+
+    /* Auth modal extras */
+    .auth-tabs { display: flex; gap: 0.3rem; background: var(--surface-2); border: 1px solid var(--border); padding: 0.25rem; border-radius: 10px; }
+    .auth-tab {
+      flex: 1; background: transparent; color: var(--muted); font-size: 0.82rem;
+      padding: 0.45rem 0.5rem; border-radius: 8px;
+    }
+    .auth-tab:hover { background: var(--surface); color: var(--text); }
+    .auth-tab.active { background: var(--accent); color: #fff; }
+    .auth-divider {
+      display: flex; align-items: center; gap: 0.65rem;
+      color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700;
+    }
+    .auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+    .google-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .auth-msg { font-size: 0.78rem; min-height: 1.1em; margin: 0; color: var(--muted); line-height: 1.4; }
+    .auth-msg.err { color: var(--err); }
+    .auth-msg.ok { color: var(--ok); }
+    .auth-hr { border: none; border-top: 1px solid var(--border); margin: 0.15rem 0; }
+    .auth-note {
+      font-size: 0.78rem; color: var(--muted); background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: 10px; padding: 0.65rem 0.8rem; line-height: 1.5;
+    }
+    .auth-note code { color: var(--accent); font-family: monospace; font-size: 0.74rem; word-break: break-all; }
+    .legacy-card {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+      padding: 0.7rem 0.85rem; display: flex; flex-direction: column; gap: 0.55rem;
+    }
+    .legacy-card .label-sm { margin: 0; }
+
+    /* Profile & Cosmetics modal */
+    .modal-profile { max-width: 780px; padding: 0; overflow: hidden; }
+    .profile-modal-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.05rem 1.4rem; border-bottom: 1px solid var(--border); background: var(--surface);
+    }
+    .profile-modal-head h3 { margin: 0; }
+    .profile-modal-body { padding: 1.20rem 1.4rem 1.4rem; max-height: calc(90vh - 72px); overflow-y: auto; }
+
+    .profile-card {
+      position: relative; border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border); background: var(--surface-2); margin-bottom: 1rem;
+    }
+    .profile-card-banner { height: 92px; position: relative; }
+    .profile-card-banner::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(8, 9, 14, 0.35) 100%);
+    }
+    .profile-card-inner { display: flex; gap: 0.95rem; align-items: flex-end; padding: 0 1rem 1rem; margin-top: -36px; position: relative; }
+    .profile-main { flex: 1; min-width: 0; padding-bottom: 0.1rem; }
+    .pc-name { font-size: 1.15rem; font-weight: 900; line-height: 1.25; word-break: break-word; }
+    .pc-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.25rem; }
+    .pc-title-pill {
+      font-size: 0.68rem; font-weight: 800; color: var(--accent);
+      background: var(--surface); border: 1px solid var(--accent); padding: 0.14rem 0.5rem; border-radius: 999px;
+    }
+    .pc-level-tag { font-size: 0.68rem; font-weight: 800; color: var(--muted); }
+    .pc-xp-track { height: 6px; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; margin-top: 0.45rem; }
+    .pc-xp-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #ec4899); border-radius: 999px; transition: width 0.4s ease; }
+    .pc-xp-label { font-size: 0.68rem; color: var(--muted); margin-top: 0.25rem; }
+
+    .avatar-wrap { position: relative; width: 76px; height: 76px; border-radius: 50%; flex-shrink: 0; background: var(--surface); }
+    .avatar-wrap img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    .avatar-initial {
+      width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center;
+      background: var(--accent); color: #fff; font-weight: 900; font-size: 1.6rem;
+    }
+    .avatar-level-badge {
+      position: absolute; bottom: -3px; right: -3px; background: var(--accent); color: #fff;
+      font-size: 0.6rem; font-weight: 900; padding: 0.14rem 0.36rem; border-radius: 999px;
+      border: 2px solid var(--surface); white-space: nowrap;
+    }
+    .avatar-wrap.sm { width: 38px; height: 38px; }
+    .avatar-wrap.sm .avatar-initial { font-size: 0.95rem; }
+    .avatar-wrap.sm .avatar-level-badge { font-size: 0.52rem; padding: 0.06rem 0.24rem; bottom: -5px; right: -5px; }
+
+    /* Profile controls */
+    .profile-controls { display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 0.5rem; }
+    .profile-field { display: flex; flex-direction: column; gap: 0.3rem; }
+    .profile-field label { font-size: 0.74rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .profile-field input[type="text"] { width: 100%; }
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.6rem 0.8rem; font-size: 0.84rem;
+    }
+    .toggle-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); cursor: pointer; }
+    .toggle-sub { font-size: 0.72rem; color: var(--muted); display: block; margin-top: 0.1rem; }
+
+    .cosmetic-tabs { display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; padding-bottom: 0.35rem; margin: 0.9rem 0 0.7rem; }
+    .cosmetic-tabs::-webkit-scrollbar { display: none; }
+    .cosmetic-tab {
+      background: var(--surface-2); border: 1px solid var(--border); color: var(--muted);
+      font-size: 0.76rem; font-weight: 700; padding: 0.38rem 0.7rem; border-radius: 999px;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .cosmetic-tab:hover { border-color: var(--accent); color: var(--text); }
+    .cosmetic-tab.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+    .cosmetic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 0.55rem; }
+    .cosmetic-item {
+      position: relative; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.7rem 0.6rem; text-align: center; color: var(--text);
+      cursor: pointer; transition: 0.15s; min-height: 92px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem;
+    }
+    .cosmetic-item:hover:not(.locked) { background: var(--surface-2); border-color: var(--accent); transform: translateY(-1px); }
+    .cosmetic-item.equipped { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .cosmetic-item.locked { cursor: not-allowed; opacity: 0.58; }
+    .ci-preview { min-height: 34px; display: grid; place-items: center; width: 100%; overflow: hidden; }
+    .ci-label { font-size: 0.74rem; font-weight: 700; line-height: 1.25; }
+    .ci-lock {
+      font-size: 0.64rem; font-weight: 800; color: var(--warn);
+      background: rgba(245, 158, 11, 0.14); border: 1px solid rgba(245, 158, 11, 0.45);
+      padding: 0.1rem 0.4rem; border-radius: 999px;
+    }
+    .ci-equipped {
+      position: absolute; top: 0.35rem; right: 0.35rem; font-size: 0.6rem; font-weight: 900;
+      background: var(--accent); color: #fff; width: 17px; height: 17px; border-radius: 50%;
+      display: grid; place-items: center;
+    }
+    .ci-title-preview { font-size: 0.68rem; font-weight: 800; color: var(--accent); border: 1px solid var(--accent); padding: 0.14rem 0.45rem; border-radius: 999px; }
+    .ci-aa { font-size: 1.15rem; font-weight: 900; line-height: 1; }
+    .ci-frame-preview { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); }
+    .ci-frame-preview .avatar-inner-dot { width: 100%; height: 100%; border-radius: 50%; background: var(--surface); opacity: 0.35; }
+    .ci-banner-swatch { width: 100%; height: 34px; border-radius: 8px; border: 1px solid var(--border); }
+
+    .profile-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1rem; }
+    .anilist-link-box {
+      margin-top: 1rem; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 0.55rem;
+    }
+    .anilist-link-box .label-sm { margin: 0; }
+    .anilist-status { font-size: 0.82rem; color: var(--muted); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+    .anilist-status strong { color: var(--text); }
+
+    /* Name colors */
+    .nc-default { color: var(--text); }
+    .nc-cyber-cyan { color: #22d3ee; }
+    .nc-sakura-pink { color: #f472b6; }
+    .nc-emerald-mint { color: #34d399; }
+    .nc-royal-gold { color: #fbbf24; }
+    .nc-sunset-gradient, .nc-nebula-gradient, .nc-prismatic-rgb {
+      color: transparent; -webkit-background-clip: text; background-clip: text;
+      background-size: 200% 200%; -webkit-text-fill-color: transparent;
+    }
+    .nc-sunset-gradient { background-image: linear-gradient(90deg, #f97316, #ec4899, #f59e0b); }
+    .nc-nebula-gradient { background-image: linear-gradient(90deg, #7c5cff, #ec4899, #06b6d4); }
+    .nc-prismatic-rgb { background-image: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e, #06b6d4, #7c5cff, #ec4899); animation: prismaticShift 4s linear infinite; }
+    @keyframes prismaticShift { to { background-position: 200% 50%; } }
+
+    /* Name effects */
+    .ne-soft-glow { animation: softGlow 2.4s ease-in-out infinite; }
+    @keyframes softGlow {
+      0%, 100% { text-shadow: 0 0 6px rgba(124, 92, 255, 0.35); }
+      50% { text-shadow: 0 0 16px rgba(124, 92, 255, 0.9); }
+    }
+    .ne-neon-pulse { animation: neonPulse 1.8s ease-in-out infinite; }
+    @keyframes neonPulse {
+      0%, 100% { text-shadow: 0 0 4px var(--accent), 0 0 10px var(--accent); }
+      50% { text-shadow: 0 0 8px var(--accent), 0 0 22px var(--accent), 0 0 36px var(--accent); }
+    }
+    .ne-shimmer-sweep {
+      color: transparent; -webkit-text-fill-color: transparent;
+      background-image: linear-gradient(100deg, var(--accent) 10%, #ec4899 30%, #06b6d4 50%, #f59e0b 70%, var(--accent) 90%);
+      background-size: 220% 100%; -webkit-background-clip: text; background-clip: text;
+      animation: shimmerSweep 2.8s linear infinite;
+    }
+    @keyframes shimmerSweep { from { background-position: 180% 0; } to { background-position: -80% 0; } }
+    .ne-chromatic-wave { animation: chromaticWave 3s ease-in-out infinite; }
+    @keyframes chromaticWave {
+      0%, 100% { text-shadow: -2px 0 rgba(239, 68, 68, 0.8), 2px 0 rgba(6, 182, 212, 0.8); }
+      33% { text-shadow: -2px 0 rgba(124, 92, 255, 0.8), 2px 0 rgba(34, 197, 94, 0.8); }
+      66% { text-shadow: -2px 0 rgba(236, 72, 153, 0.8), 2px 0 rgba(245, 158, 11, 0.8); }
+    }
+
+    /* Avatar frames */
+    .af-accent-ring { box-shadow: 0 0 0 3px var(--accent); }
+    .af-gold-crest { box-shadow: 0 0 0 3px #f59e0b, 0 0 18px rgba(245, 158, 11, 0.65); }
+    .af-cyber-pulse { animation: cyberPulse 2s ease-in-out infinite; }
+    @keyframes cyberPulse {
+      0%, 100% { box-shadow: 0 0 0 3px #06b6d4, 0 0 10px rgba(6, 182, 212, 0.5); }
+      50% { box-shadow: 0 0 0 3px #ec4899, 0 0 24px rgba(236, 72, 153, 0.85); }
+    }
+    .af-legendary-aura { animation: legendAura 3s linear infinite; }
+    @keyframes legendAura {
+      0% { box-shadow: 0 0 0 3px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.75); }
+      33% { box-shadow: 0 0 0 3px #ec4899, 0 0 26px rgba(236, 72, 153, 0.85); }
+      66% { box-shadow: 0 0 0 3px #06b6d4, 0 0 26px rgba(6, 182, 212, 0.85); }
+      100% { box-shadow: 0 0 0 3px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.75); }
+    }
+
+    /* Profile banners (also used as leaderboard row tints) */
+    .pbn-sunset-drift { background-image: linear-gradient(120deg, #1e1b4b 0%, #7c2d12 45%, #f97316 78%, #fbbf24 100%); }
+    .pbn-sakura-night { background-image: linear-gradient(120deg, #1f1026 0%, #831843 45%, #ec4899 78%, #f9a8d4 100%); }
+    .pbn-neon-city { background-image: linear-gradient(120deg, #020617 0%, #0e7490 40%, #7c3aed 72%, #ec4899 100%); }
+    .pbn-aurora-sky { background-image: linear-gradient(120deg, #042f2e 0%, #0d9488 38%, #22d3ee 65%, #6366f1 100%); }
+    .pbn-starlight-void {
+      background-image:
+        radial-gradient(circle at 18% 30%, rgba(255, 255, 255, 0.85) 0 1px, transparent 2px),
+        radial-gradient(circle at 68% 58%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+        radial-gradient(circle at 44% 18%, rgba(255, 255, 255, 0.45) 0 1px, transparent 2px),
+        linear-gradient(120deg, #0b0618 0%, #3b0764 45%, #7c5cff 80%, #fbbf24 100%);
+      background-size: 90px 90px, 130px 130px, 62px 62px, 100% 100%;
+    }
+
+    /* Leaderboard */
+    #leaderboard-section { display: none; margin-bottom: 2rem; }
+    .lb-toolbar {
+      display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1rem 1.2rem; margin-bottom: 1.1rem;
+    }
+    .lb-toolbar h2 { font-size: 1.18rem; font-weight: 900; margin-bottom: 0.15rem; }
+    .lb-toolbar p { font-size: 0.8rem; color: var(--muted); }
+    .lb-list { display: flex; flex-direction: column; gap: 0.55rem; }
+    .lb-row {
+      position: relative; display: grid; grid-template-columns: 48px 46px minmax(0, 1fr) auto;
+      gap: 0.7rem; align-items: center; overflow: hidden;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 0.55rem 0.8rem;
+    }
+    .lb-row.me { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .lb-banner-tint { position: absolute; inset: 0; opacity: 0.18; z-index: 0; }
+    .lb-row > * { position: relative; z-index: 1; }
+    .lb-rank { text-align: center; font-weight: 900; font-size: 1rem; color: var(--muted); }
+    .lb-rank.top { font-size: 1.35rem; }
+    .lb-avatar-wrap { position: relative; }
+    .lb-name-line { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; min-width: 0; }
+    .lb-name { font-weight: 800; font-size: 0.92rem; line-height: 1.25; word-break: break-word; }
+    .lb-title-pill {
+      font-size: 0.62rem; font-weight: 800; color: var(--accent); background: var(--surface-2);
+      border: 1px solid var(--border); padding: 0.1rem 0.4rem; border-radius: 999px; white-space: nowrap;
+    }
+    .lb-sub { font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+    .lb-stats { text-align: right; white-space: nowrap; }
+    .lb-xp { color: var(--accent); font-weight: 900; font-size: 0.9rem; }
+    .lb-lvl { font-size: 0.68rem; color: var(--muted); margin-top: 0.1rem; }
+    .lb-me-card {
+      background: linear-gradient(135deg, var(--accent-soft), var(--surface));
+      border: 1px solid var(--accent); border-radius: 14px; padding: 0.8rem 1rem; margin-bottom: 0.9rem;
+      font-size: 0.84rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem;
+    }
+    .lb-me-card strong { color: var(--accent); }
+    .lb-empty {
+      background: var(--surface); border: 1px dashed var(--border); border-radius: 14px;
+      padding: 1.4rem; color: var(--muted); font-size: 0.86rem; line-height: 1.55; text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 0.65rem 1rem; }
+      .header-inner { gap: 0.6rem; }
+      .nav-right { width: 100%; justify-content: space-between; }
+      .search-box { flex: 1; }
+      .search-box input { width: 100%; min-width: 0; }
+      main { padding: 1rem; }
+      #hero-banner { grid-template-columns: 1fr; padding: 1.25rem; }
+      .hero-poster { display: none; }
+      .hero-title { font-size: 1.35rem; }
+      .player-controls { padding: 1rem; }
+      .hotkey-bar { display: none !important; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+      .card-body { padding: 0.65rem; }
+      .card-title { font-size: 0.85rem; }
+      .schedule-list { grid-template-columns: 1fr; }
+      .up-title { display: none; }
+      .user-pill { max-width: 210px; }
+      .up-name { max-width: 84px; }
+      .modal-profile { max-height: 94vh; }
+      .profile-modal-body { padding: 1rem; max-height: calc(94vh - 66px); }
+      .profile-card-inner { gap: 0.7rem; padding: 0 0.8rem 0.9rem; margin-top: -30px; }
+      .avatar-wrap { width: 64px; height: 64px; }
+      .cosmetic-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lb-row { grid-template-columns: 32px 40px minmax(0, 1fr) auto; gap: 0.5rem; padding: 0.5rem 0.6rem; }
+      .lb-rank.top { font-size: 1.1rem; }
+      .lb-name { font-size: 0.86rem; }
+      .lb-xp { font-size: 0.82rem; }
+      .lb-title-pill { display: none; }
+      #toast-stack { right: 0.6rem; left: 0.6rem; bottom: calc(0.6rem + env(safe-area-inset-bottom)); align-items: stretch; }
+      .xp-toast { max-width: none; }
+    }
+    @media (max-width: 520px) {
+      .lb-row { grid-template-columns: 30px 38px minmax(0, 1fr); row-gap: 0.3rem; }
+      .lb-stats { grid-column: 2 / -1; text-align: left; display: flex; align-items: center; gap: 0.7rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="brand-group" onclick="resetHome()">
+        <div class="logo-mark">V</div>
+        <div>
+          <div class="logo-text">Vexin<span>Stream</span></div>
+        </div>
+        <span class="creator-pill">by VenixRyzen</span>
+        <span class="brave-badge" id="brave-badge">🦁 Brave Shields Detected — Optimal Protection</span>
+      </div>
+
+      <nav class="nav-tabs" id="nav-tabs">
+        <button class="tab-btn active" data-tab="TRENDING" onclick="switchTab('TRENDING')">Trending</button>
+        <button class="tab-btn" data-tab="AIRING" onclick="switchTab('AIRING')">Top Airing</button>
+        <button class="tab-btn" data-tab="POPULAR" onclick="switchTab('POPULAR')">Popular</button>
+        <button class="tab-btn" data-tab="MOVIES" onclick="switchTab('MOVIES')">Movies</button>
+        <button class="tab-btn" data-tab="SCHEDULE" onclick="switchTab('SCHEDULE')">📅 Schedule</button>
+        <button class="tab-btn" data-tab="LEADERBOARD" onclick="switchTab('LEADERBOARD')">🏆 Leaderboard</button>
+        <button class="tab-btn" data-tab="WATCHLIST" onclick="switchTab('WATCHLIST')">★ My List</button>
+      </nav>
+
+      <div class="nav-right">
+        <form class="search-box" onsubmit="handleSearch(event)">
+          <input type="text" id="search-input" placeholder="Search anime..." />
+          <button type="submit">Go</button>
+        </form>
+        <button class="install-btn" id="header-install-btn" onclick="triggerInstallPWA()">📲 Install App</button>
+        <button class="secondary" id="maturity-pill-btn" onclick="openSettingsModal()" title="Content Maturity Filter">🛡️ SFW</button>
+        <button class="secondary icon-btn" onclick="openSettingsModal()" title="Settings & Themes">⚙️</button>
+        <button class="secondary" id="auth-btn" onclick="handleAuthButtonClick()">Sign In</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- First-Time Maturity Preference Prompt -->
+  <div id="maturity-banner">
+    <div class="maturity-inner">
+      <div style="font-size:0.86rem;">
+        <strong>🔞 Content &amp; Maturity Preference:</strong> Choose whether VexinStream should hide Ecchi / suggestive titles by default:
+      </div>
+      <div class="maturity-options">
+        <button onclick="chooseInitialMaturity('SFW')">🛡️ Safe / SFW (Hide Ecchi)</button>
+        <button class="secondary" onclick="chooseInitialMaturity('STANDARD')">Standard (Allow Ecchi)</button>
+        <button class="secondary" onclick="chooseInitialMaturity('MATURE')">18+ Mature (All)</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Watch Player -->
+    <section id="player-section">
+      <div class="player-wrapper" id="player-wrapper">
+        <div id="hls-status">
+          <div id="hls-status-text">Resolving fallback stream...</div>
+          <button onclick="switchToPrimaryServer()">← Back to Vidnest (Primary)</button>
+        </div>
+        <video id="hls-video" controls playsinline style="display:none;"></video>
+        <iframe id="video-frame" allowfullscreen allow="autoplay; encrypted-media; fullscreen" referrerpolicy="origin"></iframe>
+      </div>
+
+      <div class="player-controls">
+        <div class="player-top">
+          <div>
+            <h2 id="now-playing-title" style="margin-bottom: 0.25rem; font-size: 1.3rem;">Anime Title</h2>
+            <p id="now-playing-sub" style="color: var(--muted); font-size: 0.85rem;">
+              <span id="now-playing-meta">Episode 1</span>
+              <span class="sync-toast" id="anilist-sync-toast"></span>
+            </p>
+          </div>
+          <div class="player-actions">
+            <button id="ad-shield-btn" class="shield-on" onclick="toggleServerAdShield()" title="Per-server pop-up & redirect blocker">🛡️ Ad-Shield: ON</button>
+            <button id="autonext-btn" class="secondary" onclick="toggleAutoNext()" title="Automatically play next episode on HLS player">⏭ Auto-Next: ON</button>
+            <button class="secondary" onclick="changeEpisode(-1)">← Prev</button>
+            <button class="secondary" onclick="changeEpisode(1, true)">Next →</button>
+            <button class="secondary" id="watchlist-toggle-btn" onclick="toggleWatchlist()">+ My List</button>
+            <button class="secondary" onclick="toggleConsole()">Logs</button>
+            <button class="secondary" onclick="closePlayer()">✕ Close</button>
+          </div>
+        </div>
+
+        <div class="shield-notice" id="shield-notice">
+          <span id="shield-notice-text"><strong>🛡️ Per-Server Ad-Shield:</strong> Pop-ups &amp; redirects are blocked for this server.</span>
+        </div>
+
+        <div class="adblock-recommend" id="adblock-recommend">
+          ⚠️ <strong>Ad-Shield is OFF for this server</strong> so it can load properly. Since you aren't on Brave, we recommend using <a href="https://brave.com" target="_blank" rel="noopener">Brave Browser</a> or the <a href="https://ublockorigin.com" target="_blank" rel="noopener">uBlock Origin</a> extension to block pop-up ads.
+        </div>
+
+        <div class="hotkey-bar" id="hls-hotkey-bar">
+          ⌨️ <strong>HLS Hotkeys:</strong> <kbd>Space</kbd> Play/Pause &nbsp;•&nbsp; <kbd>F</kbd> Fullscreen &nbsp;•&nbsp; <kbd>M</kbd> Mute &nbsp;•&nbsp; <kbd>N</kbd> Next Episode
+        </div>
+
+        <div>
+          <div class="label-sm">Multi-Source Embed Servers (Per-Server Sandbox Memory Active):</div>
+          <div class="server-bar" id="embed-server-bar"></div>
+        </div>
+
+        <div>
+          <div class="label-sm">Anivexa-API HLS Fallback Servers (Resume + Auto-Next + Hotkeys):</div>
+          <div class="server-bar" id="api-server-bar"></div>
+        </div>
+
+        <div>
+          <div class="ep-header-row">
+            <div class="label-sm" style="margin:0;">Episodes:</div>
+            <div class="ep-jump">
+              <input type="number" id="ep-jump-input" min="1" placeholder="Ep #" onkeydown="if(event.key==='Enter') jumpToEpisode()" />
+              <button class="secondary" style="padding:0.32rem 0.65rem; font-size:0.78rem;" onclick="jumpToEpisode()">Jump</button>
+            </div>
+          </div>
+          <div class="ep-grid" id="episode-grid"></div>
+        </div>
+
+        <div class="anime-details-box" id="anime-synopsis"></div>
+
+        <div id="console-drawer">
+          <div class="label-sm">VexinStream Diagnostics Console:</div>
+          <div class="console-box" id="debug-console"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Hero Banner -->
+    <section id="hero-banner" style="display:none;">
+      <div>
+        <span class="hero-badge">⚡ VexinStream Spotlight • by VenixRyzen</span>
+        <h1 class="hero-title" id="hero-title">Featured Anime</h1>
+        <div class="hero-sub-title" id="hero-alt-title"></div>
+        <div class="hero-meta-line" id="hero-meta"></div>
+        <p class="hero-desc" id="hero-desc"></p>
+        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <button id="hero-watch-btn">▶ Watch Episode 1</button>
+          <button class="secondary" id="hero-list-btn">+ Add to My List</button>
+        </div>
+      </div>
+      <img class="hero-poster" id="hero-poster" src="" alt="Featured Poster" />
+    </section>
+
+    <!-- Continue Watching History Bar -->
+    <section id="continue-section">
+      <div class="section-header" style="margin-bottom:0.75rem;">
+        <h2 style="font-size:1.1rem;">▶ Continue Watching</h2>
+        <button class="secondary" style="padding:0.32rem 0.65rem; font-size:0.76rem;" onclick="clearHistory()">Clear</button>
+      </div>
+      <div class="cw-strip" id="continue-strip"></div>
+    </section>
+
+    <!-- Release Schedule View -->
+    <section id="schedule-section">
+      <div class="schedule-toolbar">
+        <div>
+          <h2 style="font-size:1.18rem; margin-bottom:0.2rem;">📅 Anime Release Schedule</h2>
+          <p style="font-size:0.8rem; color:var(--muted);" id="schedule-subtitle">Showing airing times in your local timezone</p>
+        </div>
+        <div style="display:flex; gap:0.45rem; flex-wrap:wrap; align-items:center;">
+          <button class="secondary" onclick="shiftScheduleDate(-1)">← Prev</button>
+          <button class="secondary" onclick="setScheduleToday()">Today</button>
+          <button class="secondary" onclick="shiftScheduleDate(1)">Next →</button>
+          <input type="date" id="schedule-date-picker" onchange="loadScheduleByDate(this.value)" />
+        </div>
+      </div>
+      <div class="schedule-list" id="schedule-list"></div>
+    </section>
+
+    <!-- Global Leaderboard View -->
+    <section id="leaderboard-section">
+      <div class="lb-toolbar">
+        <div>
+          <h2>🏆 Global Leaderboard</h2>
+          <p id="lb-subtitle">Top 50 public VexinStream profiles ranked by total XP</p>
+        </div>
+        <div style="display:flex; gap:0.45rem; flex-wrap:wrap; align-items:center;">
+          <button class="secondary" onclick="loadLeaderboard()">↻ Refresh</button>
+          <button class="secondary" onclick="handleAuthButtonClick()" id="lb-profile-btn">My Profile</button>
+        </div>
+      </div>
+      <div id="lb-me-slot"></div>
+      <div class="lb-list" id="lb-list"></div>
+    </section>
+
+    <!-- Main Anime Catalog Grid -->
+    <section id="catalog-section">
+      <div class="section-header">
+        <div style="display:flex; align-items:baseline; gap:0.65rem;">
+          <h2 id="section-title">Trending Now</h2>
+          <span style="font-size:0.82rem; color:var(--muted);" id="result-count"></span>
+        </div>
+        <button class="secondary" onclick="playRandomAnime()">🎲 Surprise Me</button>
+      </div>
+
+      <!-- Multi-Filter Bar -->
+      <div class="multi-filter-bar" id="multi-filter-bar">
+        <div class="filter-controls-row">
+          <button class="secondary" id="genre-toggle-btn" onclick="toggleGenreDrawer()">🏷️ Genres (0) ▾</button>
+          <select id="year-filter" onchange="applyFilters()">
+            <option value="">All Years</option>
+          </select>
+          <select id="format-filter" onchange="applyFilters()">
+            <option value="">All Formats</option>
+            <option value="TV">TV Series</option>
+            <option value="MOVIE">Movie</option>
+            <option value="OVA">OVA</option>
+            <option value="ONA">ONA</option>
+            <option value="SPECIAL">Special</option>
+          </select>
+          <select id="status-filter" onchange="applyFilters()">
+            <option value="">All Status</option>
+            <option value="RELEASING">Airing Now</option>
+            <option value="FINISHED">Completed</option>
+            <option value="NOT_YET_RELEASED">Upcoming</option>
+          </select>
+          <button class="secondary" id="clear-filters-btn" style="display:none;" onclick="clearFilters()">✕ Reset Filters</button>
+        </div>
+        <div class="genre-pill-drawer" id="genre-pill-drawer"></div>
+      </div>
+
+      <div class="grid" id="anime-grid"></div>
+    </section>
+  </main>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settings-modal" onclick="if(event.target===this) closeSettingsModal()">
+    <div class="modal">
+      <h3>⚙️ VexinStream Settings</h3>
+      <p>Customize content maturity, title language, per-server sandbox memory, playback, and themes.</p>
+      <div class="modal-actions">
+        <div class="setting-row" id="settings-install-row" style="display:none;">
+          <div>
+            <div class="setting-label">📲 Install VexinStream App</div>
+            <div class="setting-sub">Add to Home Screen / Desktop standalone app</div>
+          </div>
+          <button onclick="closeSettingsModal(); triggerInstallPWA();">Install</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">🔞 Content &amp; Maturity Filter</div>
+            <div class="setting-sub">Filter Ecchi &amp; mature anime from catalog</div>
+          </div>
+          <select id="setting-maturity" onchange="updateMaturitySetting(this.value)">
+            <option value="SFW">Safe / SFW (No Ecchi)</option>
+            <option value="STANDARD">Standard (Allow Ecchi)</option>
+            <option value="MATURE">18+ Mature (All)</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Anime Title Language</div>
+            <div class="setting-sub">English (with synonym fallback) or Romaji</div>
+          </div>
+          <select id="setting-title-lang" onchange="updateTitleLang(this.value)">
+            <option value="ENGLISH">English (Default)</option>
+            <option value="ROMAJI">Romaji</option>
+          </select>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">⏭ Auto-Next Episode (HLS)</div>
+            <div class="setting-sub">Advance automatically when episode finishes</div>
+          </div>
+          <button class="secondary" id="setting-autonext-btn" onclick="toggleAutoNext()">ON</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">🛡️ Per-Server Sandbox Memory</div>
+            <div class="setting-sub" id="sandbox-memory-count">Reset saved per-server Ad-Shield rules</div>
+          </div>
+          <button class="secondary" onclick="resetSandboxMemory()">Reset</button>
+        </div>
+
+        <div class="setting-row">
+          <div>
+            <div class="setting-label">Appearance Mode</div>
+            <div class="setting-sub">Switch between Dark and Light UI</div>
+          </div>
+          <button class="secondary" id="setting-theme-btn" onclick="toggleTheme()">Dark Mode</button>
+        </div>
+
+        <div class="setting-row" style="flex-direction:column; align-items:flex-start;">
+          <div>
+            <div class="setting-label">Accent Theme Color</div>
+            <div class="setting-sub">Personalize VexinStream's highlight color</div>
+          </div>
+          <div class="swatch-row" id="accent-swatches">
+            <div class="swatch" data-color="purple"  style="background:#7c5cff;" title="Vexin Purple" onclick="setAccent('purple')"></div>
+            <div class="swatch" data-color="cyan"    style="background:#06b6d4;" title="Cyber Cyan"   onclick="setAccent('cyan')"></div>
+            <div class="swatch" data-color="crimson" style="background:#ef4444;" title="Crimson Red"  onclick="setAccent('crimson')"></div>
+            <div class="swatch" data-color="emerald" style="background:#10b981;" title="Emerald"      onclick="setAccent('emerald')"></div>
+            <div class="swatch" data-color="amber"   style="background:#f59e0b;" title="Sunset Gold"  onclick="setAccent('amber')"></div>
+            <div class="swatch" data-color="pink"    style="background:#ec4899;" title="Sakura Pink"  onclick="setAccent('pink')"></div>
+          </div>
+        </div>
+
+        <button onclick="closeSettingsModal()">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS Safari Add-to-Home-Screen Modal -->
+  <div class="modal-backdrop" id="ios-install-modal" onclick="if(event.target===this) closeIosModal()">
+    <div class="modal">
+      <h3>📲 Install VexinStream on iPhone / iPad</h3>
+      <p>Apple Safari doesn't allow automatic install pop-ups, so follow these 2 quick taps to add VexinStream as a full-screen app:</p>
+      <div class="modal-actions">
+        <div class="ios-step"><strong>1.</strong> Tap the <strong>Share</strong> icon (square with an up arrow <strong>⍐</strong>) in Safari's bottom or top bar.</div>
+        <div class="ios-step"><strong>2.</strong> Scroll down and tap <strong>"Add to Home Screen"</strong>, then tap <strong>Add</strong>.</div>
+        <button onclick="closeIosModal()">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign-In Modal -->
+  <div class="modal-backdrop" id="auth-modal" onclick="if(event.target===this) closeAuthModal()">
+    <div class="modal">
+      <h3 id="modal-title">Sign In to VexinStream</h3>
+      <p id="modal-desc">Connect your real AniList account to sync your profile and anime list, or use a quick local profile.</p>
+      <div class="modal-actions" id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Profile & Cosmetics Modal -->
+  <div class="modal-backdrop" id="profile-modal" onclick="if(event.target===this) closeProfileModal()">
+    <div class="modal modal-profile">
+      <div class="profile-modal-head">
+        <h3>🎨 Profile &amp; Cosmetics</h3>
+        <button class="secondary icon-btn" onclick="closeProfileModal()" aria-label="Close">✕</button>
+      </div>
+      <div class="profile-modal-body" id="profile-modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast-stack" aria-live="polite"></div>
+
+  <footer>
+    <div class="footer-brand">Vexin<span>Stream</span></div>
+    <p>Created &amp; Developed by <strong>VenixRyzen</strong> • Metadata via AniList • Multi-Source Streaming • v7.0</p>
+  </footer>
+
+  <script>
+    /* ============================================================
+       SUPABASE CONFIG — paste your project keys here (v7.0)
+       ------------------------------------------------------------
+       1. Create a free project at https://supabase.com
+       2. Run supabase/schema.sql in the SQL Editor
+       3. Project Settings → API → copy the Project URL + anon public key
+       4. Add your site URL (and localhost) under Authentication → URL
+          Configuration → Redirect URLs.
+       Leave blank to keep VexinStream fully functional in local-only
+       mode (XP / leaderboard / cloud profile simply stay dormant).
+       ============================================================ */
+    const SUPABASE_URL = "";       // e.g. "https://vcluslrajxsgwkporcqq.supabase.co"
+    const SUPABASE_ANON_KEY = "";  // e.g. "sb_publishable_rw52jeNwyNvzLkb-zVXBLQ_NYENSgWS"
+
+    let supabaseClient = null;
+    const SUPABASE_ENABLED = (() => {
+      try {
+        if (!window.supabase || typeof window.supabase.createClient !== "function") return false;
+        if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return false;
+        if (!/^https:\/\/.+\.supabase\.co/i.test(SUPABASE_URL.trim())) return false;
+        if (SUPABASE_ANON_KEY.trim().length < 20) return false;
+        supabaseClient = window.supabase.createClient(SUPABASE_URL.trim(), SUPABASE_ANON_KEY.trim(), {
+          auth: {
+            // PKCE avoids the #access_token hash used by the legacy AniList OAuth flow
+            flowType: "pkce",
+            detectSessionInUrl: true,
+            persistSession: true,
+            autoRefreshToken: true
+          }
+        });
+        return true;
+      } catch (err) {
+        console.warn("[VexinStream] Supabase init skipped:", err.message);
+        supabaseClient = null;
+        return false;
+      }
+    })();
+
+    const XP_PER_EPISODE = 50;
+    const COSMETIC_FIELD = {
+      titles: "equipped_title",
+      nameColors: "equipped_name_color",
+      nameEffects: "equipped_name_effect",
+      avatarFrames: "equipped_avatar_frame",
+      banners: "equipped_banner"
+    };
+    const COSMETIC_DB_CATEGORY = {
+      titles: "title",
+      nameColors: "name_color",
+      nameEffects: "name_effect",
+      avatarFrames: "avatar_frame",
+      banners: "banner"
+    };
+    const COSMETIC_TAB_LABELS = {
+      titles: "👑 Titles",
+      nameColors: "🎨 Name Colors",
+      nameEffects: "✨ Name Effects",
+      avatarFrames: "🖼️ Avatar Frames",
+      banners: "🌌 Banners"
+    };
+
+    /* Level-gated cosmetic catalog (mirrors supabase/schema.sql) */
+    const COSMETIC_CATALOG = {
+      titles: [
+        { id: "newcomer",        label: "Newcomer",        icon: "🌱", requiredLevel: 1 },
+        { id: "sub-enjoyer",     label: "Sub Enjoyer",     icon: "📺", requiredLevel: 2 },
+        { id: "binge-watcher",   label: "Binge Watcher",   icon: "🍿", requiredLevel: 4 },
+        { id: "night-owl",       label: "Night Owl",       icon: "🌙", requiredLevel: 6 },
+        { id: "sakuga-hunter",   label: "Sakuga Hunter",   icon: "✨", requiredLevel: 9 },
+        { id: "vexin-vanguard",  label: "Vexin Vanguard",  icon: "🛡️", requiredLevel: 12 },
+        { id: "anime-archivist", label: "Anime Archivist", icon: "📚", requiredLevel: 16 },
+        { id: "venix-elite",     label: "Venix Elite",     icon: "👑", requiredLevel: 20 }
+      ],
+      nameColors: [
+        { id: "default",          label: "Default",          css: "nc-default",          requiredLevel: 1 },
+        { id: "cyber-cyan",       label: "Cyber Cyan",       css: "nc-cyber-cyan",       requiredLevel: 2 },
+        { id: "sakura-pink",      label: "Sakura Pink",      css: "nc-sakura-pink",      requiredLevel: 3 },
+        { id: "emerald-mint",     label: "Emerald Mint",     css: "nc-emerald-mint",     requiredLevel: 5 },
+        { id: "royal-gold",       label: "Royal Gold",       css: "nc-royal-gold",       requiredLevel: 7 },
+        { id: "sunset-gradient",  label: "Sunset Gradient",  css: "nc-sunset-gradient",  requiredLevel: 10 },
+        { id: "nebula-gradient",  label: "Nebula Gradient",  css: "nc-nebula-gradient",  requiredLevel: 13 },
+        { id: "prismatic-rgb",    label: "Prismatic RGB",    css: "nc-prismatic-rgb",    requiredLevel: 18 }
+      ],
+      nameEffects: [
+        { id: "none",            label: "None",            css: "",                     requiredLevel: 1 },
+        { id: "soft-glow",       label: "Soft Glow",       css: "ne-soft-glow",         requiredLevel: 6 },
+        { id: "neon-pulse",      label: "Neon Pulse",      css: "ne-neon-pulse",        requiredLevel: 11 },
+        { id: "shimmer-sweep",   label: "Shimmer Sweep",   css: "ne-shimmer-sweep",     requiredLevel: 15 },
+        { id: "chromatic-wave",  label: "Chromatic Wave",  css: "ne-chromatic-wave",    requiredLevel: 20 }
+      ],
+      avatarFrames: [
+        { id: "none",            label: "None",            css: "",                     requiredLevel: 1 },
+        { id: "accent-ring",     label: "Accent Ring",     css: "af-accent-ring",       requiredLevel: 3 },
+        { id: "gold-crest",      label: "Gold Crest",      css: "af-gold-crest",        requiredLevel: 8 },
+        { id: "cyber-pulse",     label: "Cyber Pulse",     css: "af-cyber-pulse",       requiredLevel: 14 },
+        { id: "legendary-aura",  label: "Legendary Aura",  css: "af-legendary-aura",    requiredLevel: 20 }
+      ],
+      banners: [
+        { id: "sunset-drift",    label: "Sunset Drift",    css: "pbn-sunset-drift",     requiredLevel: 1 },
+        { id: "sakura-night",    label: "Sakura Night",    css: "pbn-sakura-night",     requiredLevel: 4 },
+        { id: "neon-city",       label: "Neon City",       css: "pbn-neon-city",        requiredLevel: 8 },
+        { id: "aurora-sky",      label: "Aurora Sky",      css: "pbn-aurora-sky",       requiredLevel: 12 },
+        { id: "starlight-void",  label: "Starlight Void",  css: "pbn-starlight-void",   requiredLevel: 17 }
+      ]
+    };
+
+    let supabaseUser = null;
+    let supabaseProfile = null;
+    const claimedXpKeys = new Set();
+    let authMode = "signin";
+    let activeCosmeticTab = "titles";
+    let profileDraftName = "";
+
+    const BASE_GENRES = [
+      "Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror",
+      "Mecha", "Music", "Mystery", "Psychological", "Romance", "Sci-Fi",
+      "Slice of Life", "Sports", "Supernatural", "Thriller"
+    ];
+
+    const ACCENT_HEX = {
+      purple: "7c5cff",
+      cyan: "06b6d4",
+      crimson: "ef4444",
+      emerald: "10b981",
+      amber: "f59e0b",
+      pink: "ec4899"
+    };
+
+    let settings = JSON.parse(localStorage.getItem("vexin_settings") || '{"titleLang":"ENGLISH","theme":"dark","accent":"purple","maturity":"SFW","autoNext":true}');
+    if (typeof settings.autoNext === "undefined") settings.autoNext = true;
+    if (!settings.maturity) settings.maturity = "SFW";
+
+    // Per-Server Sandbox Memory: { [serverKey]: boolean }
+    let sandboxPrefs = JSON.parse(localStorage.getItem("vexin_sandbox_prefs") || "{}");
+    let isBraveBrowser = false;
+
+    let selectedGenres = [];
+    let currentTab = "TRENDING";
+    let currentSearchTerm = "";
+    let lastLoadedList = [];
+    let lastScheduleItems = [];
+    let currentHeroAnime = null;
+    let currentAnime = null;
+    let currentEp = 1;
+    let showAllEpisodes = false;
+    let activeServerKey = "vidnest-sub";
+    let scheduleDate = new Date();
+    let hlsInstance = null;
+    let hlsProgressTimer = null;
+    let deferredInstallPrompt = null;
+    const syncedAniListKeys = new Set();
+
+    let userProfile = JSON.parse(localStorage.getItem("vexin_user") || "null");
+    let watchlist = JSON.parse(localStorage.getItem("vexin_watchlist") || "[]");
+    let watchHistory = JSON.parse(localStorage.getItem("vexin_history") || "[]");
+
+    // 1. Primary Multi-Source Embed Servers (with defaultSandbox hints)
+    const EMBED_SERVERS = [
+      { key: "vidnest-sub",      name: "Vidnest (Sub)",         defaultSandbox: true,  url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/sub` },
+      { key: "vidnest-dub",      name: "Vidnest (Dub)",         defaultSandbox: true,  url: (a, ep) => `https://vidnest.fun/anime/${a.id}/${ep}/dub` },
+      { key: "videasy-sub",      name: "Videasy (Sub)",         defaultSandbox: true,  url: (a, ep) => `https://player.videasy.net/anime/${a.id}/${ep}?color=${ACCENT_HEX[settings.accent] || "7c5cff"}&overlay=true` },
+      { key: "videasy-dub",      name: "Videasy (Dub)",         defaultSandbox: true,  url: (a, ep) => `https://player.videasy.net/anime/${a.id}/${ep}?dub=true&color=${ACCENT_HEX[settings.accent] || "7c5cff"}&overlay=true` },
+      { key: "vidnest-pahe-sub", name: "AnimePahe Embed (Sub)", defaultSandbox: true,  url: (a, ep) => `https://vidnest.fun/animepahe/${a.id}/${ep}/sub` },
+      { key: "vidnest-pahe-dub", name: "AnimePahe Embed (Dub)", defaultSandbox: true,  url: (a, ep) => `https://vidnest.fun/animepahe/${a.id}/${ep}/dub` },
+      { key: "megaplay-mal-sub", name: "MegaPlay (Sub)",        defaultSandbox: false, url: (a, ep) => `https://megaplay.buzz/stream/mal/${a.idMal || a.id}/${ep}/sub` },
+      { key: "megaplay-mal-dub", name: "MegaPlay (Dub)",        defaultSandbox: false, url: (a, ep) => `https://megaplay.buzz/stream/mal/${a.idMal || a.id}/${ep}/dub` },
+      { key: "zoko-sub",         name: "ZokoAnime (Sub)",       defaultSandbox: true,  url: (a, ep) => `https://zokoanime.video/stream/ani/${a.id}/${ep}/sub` },
+      { key: "zoko-dub",         name: "ZokoAnime (Dub)",       defaultSandbox: true,  url: (a, ep) => `https://zokoanime.video/stream/ani/${a.id}/${ep}/dub` }
+    ];
+
+    // 2. Secondary Fallback Servers via Anivexa-API
+    const API_SERVERS = [
+      { key: "anizone-sub",   name: "AniZone (HLS)",   provider: "anizone",   lang: "sub" },
+      { key: "animepahe-sub", name: "AnimePahe (HLS)", provider: "animepahe", lang: "sub" },
+      { key: "anikoto-sub",   name: "Anikoto (Sub)",   provider: "anikoto",   lang: "sub" },
+      { key: "anikoto-dub",   name: "Anikoto (Dub)",   provider: "anikoto",   lang: "dub" },
+      { key: "reanime-sub",   name: "Re:ANIME (Sub)",  provider: "reanime",   lang: "sub" },
+      { key: "allmanga-sub",  name: "AllManga (HLS)",  provider: "allmanga",  lang: "sub" }
+    ];
+
+    /* Browser Detection (Brave Shields vs Chromium/Safari) */
+    async function detectBrowser() {
+      try {
+        if (navigator.brave && typeof navigator.brave.isBrave === "function") {
+          isBraveBrowser = await navigator.brave.isBrave();
+        }
+      } catch (_) {
+        isBraveBrowser = false;
+      }
+      if (isBraveBrowser) {
+        document.getElementById("brave-badge").style.display = "inline-block";
+        logMsg("Brave Shields detected — defaulting iframe sandbox OFF for maximum server compatibility.");
+      }
+    }
+
+    /* Per-Server Sandbox Memory Helpers */
+    function isSandboxEnabledForServer(serverKey) {
+      if (Object.prototype.hasOwnProperty.call(sandboxPrefs, serverKey)) {
+        return Boolean(sandboxPrefs[serverKey]);
+      }
+      if (isBraveBrowser) return false; // Brave natively blocks pop-ups/ads without sandbox restrictions
+      const srv = EMBED_SERVERS.find(s => s.key === serverKey);
+      return srv ? srv.defaultSandbox : true;
+    }
+
+    function toggleServerAdShield() {
+      const apiMatch = API_SERVERS.find(s => s.key === activeServerKey);
+      if (apiMatch) return; // HLS native video doesn't use iframe sandbox
+      const currentVal = isSandboxEnabledForServer(activeServerKey);
+      const nextVal = !currentVal;
+      sandboxPrefs[activeServerKey] = nextVal;
+      localStorage.setItem("vexin_sandbox_prefs", JSON.stringify(sandboxPrefs));
+      logMsg(`Saved Ad-Shield=${nextVal ? "ON" : "OFF"} for [${activeServerKey}].`);
+      updatePlayerShieldUI();
+      if (currentAnime && document.getElementById("player-section").style.display !== "none") {
+        openPlayer(currentAnime, currentEp, false);
+      }
+    }
+
+    function resetSandboxMemory() {
+      sandboxPrefs = {};
+      localStorage.removeItem("vexin_sandbox_prefs");
+      updatePlayerShieldUI();
+      applySettingsUI();
+      if (currentAnime && document.getElementById("player-section").style.display !== "none") {
+        openPlayer(currentAnime, currentEp, false);
+      }
+    }
+
+    function updatePlayerShieldUI() {
+      const shieldBtn = document.getElementById("ad-shield-btn");
+      const noticeText = document.getElementById("shield-notice-text");
+      const recBanner = document.getElementById("adblock-recommend");
+      const apiMatch = API_SERVERS.find(s => s.key === activeServerKey);
+
+      if (apiMatch) {
+        shieldBtn.style.display = "none";
+        recBanner.style.display = "none";
+        noticeText.innerHTML = `<strong>🎬 Native HLS Stream:</strong> Direct video playback via Anivexa-API (no third-party iframe ads).`;
+        return;
+      }
+
+      shieldBtn.style.display = "inline-block";
+      const enabled = isSandboxEnabledForServer(activeServerKey);
+      const srvObj = EMBED_SERVERS.find(s => s.key === activeServerKey);
+      const srvName = srvObj ? srvObj.name : activeServerKey;
+
+      if (enabled) {
+        shieldBtn.className = "shield-on";
+        shieldBtn.textContent = "🛡️ Ad-Shield: ON";
+        noticeText.innerHTML = `<strong>🛡️ Ad-Shield ON for ${srvName}:</strong> Pop-ups &amp; redirects are blocked. Toggle OFF if this server refuses to play.`;
+        recBanner.style.display = "none";
+      } else {
+        shieldBtn.className = "shield-off";
+        shieldBtn.textContent = "⚠️ Ad-Shield: OFF";
+        noticeText.innerHTML = isBraveBrowser
+          ? `<strong>🦁 Brave Shields Active:</strong> Sandbox is OFF for <strong>${srvName}</strong> so it loads cleanly while Brave blocks ads.`
+          : `<strong>⚠️ Ad-Shield OFF for ${srvName}:</strong> Saved for this server only.`;
+        recBanner.style.display = isBraveBrowser ? "none" : "block";
+      }
+    }
+
+    /* Dynamic Open Graph & Page Metadata */
+    function updateDynamicMetaTags(anime = null) {
+      const defaultTitle = "VexinStream — Watch Anime Free | by VenixRyzen";
+      const defaultDesc = "Multi-source anime streaming web app with Ad-Shield, Brave optimization, AniList auto-sync, and PWA install support. Created by VenixRyzen.";
+      const defaultImg = "https://s4.anilist.co/file/anilistcdn/media/anime/banner/16498-8jpFCOcDmneX.jpg";
+
+      if (!anime) {
+        document.title = defaultTitle;
+        document.getElementById("og-title")?.setAttribute("content", defaultTitle);
+        document.getElementById("og-description")?.setAttribute("content", defaultDesc);
+        document.getElementById("og-image")?.setAttribute("content", defaultImg);
+        document.getElementById("twitter-title")?.setAttribute("content", defaultTitle);
+        document.getElementById("twitter-description")?.setAttribute("content", defaultDesc);
+        document.getElementById("twitter-image")?.setAttribute("content", defaultImg);
+        return;
+      }
+
+      const title = `${getAnimeTitle(anime)} (Ep ${currentEp}) — VexinStream`;
+      const desc = (anime.description || defaultDesc).replace(/<[^>]*>/g, "").slice(0, 180);
+      const img = anime.bannerImage || anime.coverImage?.extraLarge || anime.coverImage?.large || defaultImg;
+
+      document.title = title;
+      document.getElementById("og-title")?.setAttribute("content", title);
+      document.getElementById("og-description")?.setAttribute("content", desc);
+      document.getElementById("og-image")?.setAttribute("content", img);
+      document.getElementById("twitter-title")?.setAttribute("content", title);
+      document.getElementById("twitter-description")?.setAttribute("content", desc);
+      document.getElementById("twitter-image")?.setAttribute("content", img);
+    }
+
+    /* PWA & Install Prompt Logic */
+    function isStandaloneMode() {
+      return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    }
+
+    function isIosSafari() {
+      const ua = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test(ua) && !isStandaloneMode();
+    }
+
+    function updateInstallButtons(visible) {
+      document.getElementById("header-install-btn").style.display = visible ? "inline-block" : "none";
+      document.getElementById("settings-install-row").style.display = visible ? "flex" : "none";
+    }
+
+    function initPWA() {
+      if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+        navigator.serviceWorker.register("./sw.js")
+          .then(() => logMsg("PWA Service Worker active."))
+          .catch((err) => logMsg(`SW note: ${err.message}`));
+      }
+
+      if (isStandaloneMode()) {
+        updateInstallButtons(false);
+        return;
+      }
+
+      if (isIosSafari()) {
+        updateInstallButtons(true);
+      }
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        updateInstallButtons(true);
+      });
+
+      window.addEventListener("appinstalled", () => {
+        deferredInstallPrompt = null;
+        updateInstallButtons(false);
+      });
+    }
+
+    async function triggerInstallPWA() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        const choice = await deferredInstallPrompt.userChoice;
+        if (choice.outcome === "accepted") {
+          deferredInstallPrompt = null;
+          updateInstallButtons(false);
+        }
+      } else if (isIosSafari()) {
+        document.getElementById("ios-install-modal").style.display = "flex";
+      }
+    }
+
+    function closeIosModal() {
+      document.getElementById("ios-install-modal").style.display = "none";
+    }
+
+    /* Smart Title Resolver: Official English -> English Synonym -> Romaji */
+    function findEnglishSynonym(anime) {
+      if (!anime || !Array.isArray(anime.synonyms)) return null;
+      const romajiLower = (anime.title?.romaji || "").toLowerCase();
+      const latinSynonym = anime.synonyms.find(s => {
+        if (!s || s.length < 3) return false;
+        if (s.toLowerCase() === romajiLower) return false;
+        const hasLatin = /[a-zA-Z]{3,}/.test(s);
+        const hasCJK = /[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af]/.test(s);
+        return hasLatin && !hasCJK;
+      });
+      return latinSynonym || null;
+    }
+
+    function getAnimeTitle(anime) {
+      if (!anime || !anime.title) return "Unknown Title";
+      if (settings.titleLang === "ROMAJI") {
+        return anime.title.romaji || anime.title.english || "Unknown Title";
+      }
+      return anime.title.english || findEnglishSynonym(anime) || anime.title.romaji || "Unknown Title";
+    }
+
+    function getAltTitle(anime) {
+      if (!anime || !anime.title) return "";
+      const primary = getAnimeTitle(anime);
+      const secondary = settings.titleLang === "ROMAJI"
+        ? (anime.title.english || findEnglishSynonym(anime))
+        : anime.title.romaji;
+      return (secondary && secondary !== primary) ? secondary : "";
+    }
+
+    function logMsg(msg) {
+      const box = document.getElementById("debug-console");
+      const time = new Date().toLocaleTimeString();
+      const line = document.createElement("div");
+      line.textContent = `[${time}] ${msg}`;
+      box.appendChild(line);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function toggleConsole() {
+      const el = document.getElementById("console-drawer");
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    }
+
+    /* Settings, Maturity, Auto-Next & Themes */
+    function saveSettings() {
+      localStorage.setItem("vexin_settings", JSON.stringify(settings));
+    }
+
+    function applySettingsUI() {
+      document.documentElement.setAttribute("data-theme", settings.theme || "dark");
+      document.documentElement.setAttribute("data-accent", settings.accent || "purple");
+      const themeMeta = document.getElementById("meta-theme-color");
+      if (themeMeta) themeMeta.setAttribute("content", `#${ACCENT_HEX[settings.accent] || "7c5cff"}`);
+
+      document.getElementById("setting-title-lang").value = settings.titleLang || "ENGLISH";
+      document.getElementById("setting-maturity").value = settings.maturity || "SFW";
+      document.getElementById("setting-theme-btn").textContent = settings.theme === "dark" ? "🌙 Dark Mode" : "☀️ Light Mode";
+
+      const autoLabel = settings.autoNext ? "ON" : "OFF";
+      document.getElementById("autonext-btn").textContent = `⏭ Auto-Next: ${autoLabel}`;
+      document.getElementById("setting-autonext-btn").textContent = autoLabel;
+
+      const customCount = Object.keys(sandboxPrefs).length;
+      document.getElementById("sandbox-memory-count").textContent = customCount > 0
+        ? `${customCount} custom server rule(s) saved`
+        : "Using smart browser defaults";
+
+      const matLabels = { SFW: "🛡️ SFW", STANDARD: "⚡ Standard", MATURE: "🔞 18+" };
+      document.getElementById("maturity-pill-btn").textContent = matLabels[settings.maturity] || "🛡️ SFW";
+
+      document.querySelectorAll(".swatch").forEach(s => {
+        s.classList.toggle("active", s.dataset.color === (settings.accent || "purple"));
+      });
+    }
+
+    function toggleAutoNext() {
+      settings.autoNext = !settings.autoNext;
+      saveSettings();
+      applySettingsUI();
+    }
+
+    function checkFirstVisitMaturity() {
+      if (!localStorage.getItem("vexin_maturity_confirmed")) {
+        document.getElementById("maturity-banner").style.display = "block";
+      }
+    }
+
+    function chooseInitialMaturity(level) {
+      localStorage.setItem("vexin_maturity_confirmed", "true");
+      document.getElementById("maturity-banner").style.display = "none";
+      updateMaturitySetting(level);
+    }
+
+    function updateMaturitySetting(level) {
+      settings.maturity = level;
+      localStorage.setItem("vexin_maturity_confirmed", "true");
+      document.getElementById("maturity-banner").style.display = "none";
+      saveSettings();
+      applySettingsUI();
+      renderGenreChips();
+      applyFilters();
+    }
+
+    function applyIframeSandbox(iframeEl, enableSandbox) {
+      const parent = iframeEl.parentNode;
+      const fresh = document.createElement("iframe");
+      fresh.id = "video-frame";
+      fresh.allowFullscreen = true;
+      fresh.allow = "autoplay; encrypted-media; fullscreen";
+      fresh.referrerPolicy = "origin";
+      if (enableSandbox) {
+        fresh.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-presentation");
+      }
+      parent.replaceChild(fresh, iframeEl);
+      return fresh;
+    }
+
+    function openSettingsModal() {
+      applySettingsUI();
+      document.getElementById("settings-modal").style.display = "flex";
+    }
+
+    function closeSettingsModal() {
+      document.getElementById("settings-modal").style.display = "none";
+    }
+
+    function toggleTheme() {
+      settings.theme = settings.theme === "dark" ? "light" : "dark";
+      saveSettings();
+      applySettingsUI();
+    }
+
+    function setAccent(color) {
+      settings.accent = color;
+      saveSettings();
+      applySettingsUI();
+    }
+
+    function updateTitleLang(lang) {
+      settings.titleLang = lang;
+      saveSettings();
+      if (currentHeroAnime && document.getElementById("hero-banner").style.display !== "none") {
+        renderHero(currentHeroAnime);
+      }
+      if (currentAnime && document.getElementById("player-section").style.display !== "none") {
+        document.getElementById("now-playing-title").textContent = getAnimeTitle(currentAnime);
+        updateDynamicMetaTags(currentAnime);
+      }
+      renderContinueWatching();
+      if (currentTab === "SCHEDULE") {
+        renderScheduleItems(lastScheduleItems);
+      } else if (currentTab !== "LEADERBOARD") {
+        renderGrid(lastLoadedList);
+      }
+    }
+
+    /* Multi-Filter Initialization */
+    function renderGenreChips() {
+      const drawer = document.getElementById("genre-pill-drawer");
+      drawer.innerHTML = "";
+      const genres = settings.maturity === "SFW" ? BASE_GENRES : [...BASE_GENRES, "Ecchi"];
+      selectedGenres = selectedGenres.filter(g => genres.includes(g));
+      document.getElementById("genre-toggle-btn").textContent = `🏷️ Genres (${selectedGenres.length}) ▾`;
+
+      genres.forEach(g => {
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = `genre-chip ${selectedGenres.includes(g) ? "selected" : ""}`;
+        chip.textContent = g === "Ecchi" ? "🔞 Ecchi" : g;
+        chip.onclick = () => {
+          if (selectedGenres.includes(g)) {
+            selectedGenres = selectedGenres.filter(item => item !== g);
+            chip.classList.remove("selected");
+          } else {
+            selectedGenres.push(g);
+            chip.classList.add("selected");
+          }
+          document.getElementById("genre-toggle-btn").textContent = `🏷️ Genres (${selectedGenres.length}) ▾`;
+          applyFilters();
+        };
+        drawer.appendChild(chip);
+      });
+    }
+
+    function initFilters() {
+      const yearSelect = document.getElementById("year-filter");
+      const currentYear = new Date().getFullYear() + 1;
+      for (let y = currentYear; y >= 1990; y--) {
+        const opt = document.createElement("option");
+        opt.value = y;
+        opt.textContent = y;
+        yearSelect.appendChild(opt);
+      }
+      renderGenreChips();
+    }
+
+    function toggleGenreDrawer() {
+      document.getElementById("genre-pill-drawer").classList.toggle("open");
+    }
+
+    /* Real AniList OAuth & Auto-Progress Sync */
+    async function handleOAuthRedirect() {
+      const hash = window.location.hash;
+      if (!hash || !hash.includes("access_token=")) return;
+
+      const params = new URLSearchParams(hash.substring(1));
+      const token = params.get("access_token");
+      if (!token) return;
+
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+
+      try {
+        const res = await fetch(ANILIST_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ query: `query { Viewer { id name avatar { medium } } }` })
+        });
+        const json = await res.json();
+        if (json.data && json.data.Viewer) {
+          const viewer = json.data.Viewer;
+          userProfile = {
+            id: viewer.id,
+            name: viewer.name,
+            avatar: viewer.avatar?.medium || "",
+            token,
+            type: "anilist"
+          };
+          localStorage.setItem("vexin_user", JSON.stringify(userProfile));
+          updateAuthUI();
+          logMsg(`Signed in via AniList OAuth as ${viewer.name}`);
+          await syncAniListWatchlist();
+        }
+      } catch (err) {
+        logMsg(`AniList OAuth error: ${err.message}`);
+      }
+    }
+
+    async function syncAniListWatchlist() {
+      if (!userProfile || userProfile.type !== "anilist" || !userProfile.id) return;
+      try {
+        const query = `
+          query ($userId: Int) {
+            MediaListCollection(userId: $userId, type: ANIME, status_in: [CURRENT, PLANNING]) {
+              lists {
+                entries {
+                  media { ${MEDIA_FIELDS} }
+                }
+              }
+            }
+          }`;
+        const data = await fetchAniList(query, { userId: userProfile.id });
+        const entries = data?.MediaListCollection?.lists?.flatMap(l => l.entries) || [];
+        if (entries.length > 0) {
+          const syncedMedia = entries.map(e => e.media);
+          const mergedMap = new Map();
+          [...syncedMedia, ...watchlist].forEach(m => mergedMap.set(m.id, m));
+          watchlist = Array.from(mergedMap.values());
+          localStorage.setItem("vexin_watchlist", JSON.stringify(watchlist));
+          logMsg(`Synced ${syncedMedia.length} anime from AniList.`);
+        }
+      } catch (e) {
+        logMsg(`AniList sync error: ${e.message}`);
+      }
+    }
+
+    async function syncAniListEpisodeProgress(anime, completedEp) {
+      if (!anime || !userProfile || userProfile.type !== "anilist" || !userProfile.token) return;
+      const syncKey = `${anime.id}:${completedEp}`;
+      if (syncedAniListKeys.has(syncKey)) return;
+      syncedAniListKeys.add(syncKey);
+
+      const isFinal = anime.episodes && completedEp >= anime.episodes;
+      const status = isFinal ? "COMPLETED" : "CURRENT";
+
+      try {
+        const res = await fetch(ANILIST_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${userProfile.token}`
+          },
+          body: JSON.stringify({
+            query: `
+              mutation ($mediaId: Int, $progress: Int, $status: MediaListStatus) {
+                SaveMediaListEntry(mediaId: $mediaId, progress: $progress, status: $status) {
+                  id
+                  progress
+                  status
+                }
+              }`,
+            variables: { mediaId: anime.id, progress: completedEp, status }
+          })
+        });
+        const json = await res.json();
+        if (json.data?.SaveMediaListEntry) {
+          const toast = document.getElementById("anilist-sync-toast");
+          if (toast) toast.textContent = `✓ AniList synced: Ep ${completedEp}${isFinal ? " (Completed)" : ""}`;
+          logMsg(`AniList progress updated -> ${getAnimeTitle(anime)} Ep ${completedEp} (${status})`);
+        }
+      } catch (err) {
+        logMsg(`AniList progress sync failed: ${err.message}`);
+      }
+    }
+
+    /* ============================================================
+       v7.0 — Supabase auth, XP leveling, cosmetics & leaderboard
+       ============================================================ */
+    function escapeHtml(value) {
+      return String(value == null ? "" : value).replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+    function escapeAttr(value) { return escapeHtml(value); }
+
+    /* Level formula: level = floor(sqrt(xp / 100)) + 1 */
+    function levelFromXp(xp) {
+      const total = Math.max(0, Number(xp) || 0);
+      return Math.floor(Math.sqrt(total / 100)) + 1;
+    }
+    function xpProgress(xp) {
+      const total = Math.max(0, Number(xp) || 0);
+      const level = levelFromXp(total);
+      const min = Math.pow(level - 1, 2) * 100;
+      const next = Math.pow(level, 2) * 100;
+      const span = Math.max(1, next - min);
+      return { total, level, min, next, pct: Math.min(100, Math.max(0, ((total - min) / span) * 100)) };
+    }
+
+    function getProfileDisplayName(p) {
+      if (p && p.display_name) return p.display_name;
+      // Never leak the signed-in viewer's metadata onto another user's row.
+      if (p && p.id && supabaseUser && p.id !== supabaseUser.id) return "Anime Fan";
+      if (supabaseUser) {
+        const meta = supabaseUser.user_metadata || {};
+        return meta.display_name || meta.full_name || meta.name ||
+          (supabaseUser.email ? supabaseUser.email.split("@")[0] : "Anime Fan");
+      }
+      return "Anime Fan";
+    }
+    function getProfileLevel(p) {
+      if (!p) return 1;
+      return p.level || levelFromXp(p.xp);
+    }
+    function getProfileAvatar(p) {
+      if (p && p.avatar_url) {
+        const ownUrl = String(p.avatar_url);
+        return /^https?:\/\//i.test(ownUrl) || /^data:image\//i.test(ownUrl) ? ownUrl : "";
+      }
+      // Only fall back to auth metadata for the viewer's own profile.
+      if (p && p.id && supabaseUser && p.id !== supabaseUser.id) return "";
+      const meta = (supabaseUser && supabaseUser.user_metadata) || {};
+      const url = meta.avatar_url || meta.picture || "";
+      return /^https?:\/\//i.test(url) || /^data:image\//i.test(url) ? url : "";
+    }
+
+    function cosmeticLabel(category, id) {
+      return (COSMETIC_CATALOG[category] || []).find(item => item.id === id) || null;
+    }
+    function cosmeticCss(category, id) {
+      const item = cosmeticLabel(category, id);
+      return item && item.css ? item.css : "";
+    }
+
+    function blankProfile(user) {
+      return {
+        id: user ? user.id : null,
+        display_name: "",
+        avatar_url: "",
+        xp: 0,
+        level: 1,
+        episodes_watched: 0,
+        is_public: true,
+        equipped_title: "newcomer",
+        equipped_name_color: "default",
+        equipped_name_effect: "none",
+        equipped_avatar_frame: "none",
+        equipped_banner: "sunset-drift"
+      };
+    }
+
+    function pushToast(html, cls = "", ttl = 3800) {
+      const stack = document.getElementById("toast-stack");
+      if (!stack) return;
+      const el = document.createElement("div");
+      el.className = "xp-toast " + cls;
+      el.innerHTML = html;
+      stack.appendChild(el);
+      setTimeout(() => {
+        el.classList.add("out");
+        setTimeout(() => el.remove(), 340);
+      }, ttl);
+    }
+
+    function getUnlockedCosmetics(oldLevel, newLevel) {
+      const unlocked = [];
+      Object.keys(COSMETIC_CATALOG).forEach(category => {
+        COSMETIC_CATALOG[category].forEach(item => {
+          if (item.requiredLevel > oldLevel && item.requiredLevel <= newLevel) {
+            unlocked.push(Object.assign({ category }, item));
+          }
+        });
+      });
+      return unlocked;
+    }
+
+    function showLevelUpBanner(data) {
+      const newLevel = data.level;
+      const oldLevel = data.old_level || (newLevel - 1);
+      const unlocks = getUnlockedCosmetics(oldLevel, newLevel);
+      const chips = unlocks.slice(0, 5).map(item =>
+        `<span class="lu-chip">${escapeHtml((item.icon ? item.icon + " " : "") + item.label)}</span>`
+      ).join("");
+      const el = document.createElement("div");
+      el.className = "levelup-banner";
+      el.innerHTML = `
+        <div class="lu-kicker">Level Up!</div>
+        <div class="lu-title">You reached Level ${newLevel}</div>
+        <div class="lu-sub">${unlocks.length ? "New cosmetics unlocked:" : "Keep watching to unlock more cosmetics!"}</div>
+        ${chips ? `<div class="lu-unlocks">${chips}</div>` : ""}`;
+      document.body.appendChild(el);
+      setTimeout(() => {
+        el.classList.add("out");
+        setTimeout(() => el.remove(), 420);
+      }, 5200);
+    }
+
+    /* ---------- Supabase session lifecycle ---------- */
+    async function loadSupabaseProfile() {
+      if (!supabaseClient || !supabaseUser) { supabaseProfile = null; return; }
+      const seed = blankProfile(supabaseUser);
+      seed.display_name = getProfileDisplayName(seed).slice(0, 24);
+      seed.avatar_url = getProfileAvatar(seed);
+      try {
+        const { data, error } = await supabaseClient
+          .from("profiles").select("*").eq("id", supabaseUser.id).maybeSingle();
+        if (error) throw error;
+        if (data) {
+          supabaseProfile = data;
+          return;
+        }
+        // Fallback if the handle_new_user trigger has not populated a row yet.
+        const { data: created, error: insertError } = await supabaseClient
+          .from("profiles")
+          .insert({ id: supabaseUser.id, display_name: seed.display_name, avatar_url: seed.avatar_url })
+          .select("*")
+          .maybeSingle();
+        if (insertError) {
+          logMsg(`Profile create note: ${insertError.message}`);
+          supabaseProfile = seed;
+        } else {
+          supabaseProfile = created || seed;
+        }
+      } catch (err) {
+        logMsg(`Supabase profile load failed: ${err.message}`);
+        supabaseProfile = seed;
+      }
+    }
+
+    async function handleSupabaseSession(session) {
+      const nextUser = session && session.user ? session.user : null;
+      if (!nextUser) {
+        supabaseUser = null;
+        supabaseProfile = null;
+      } else {
+        const isNewUser = !supabaseUser || supabaseUser.id !== nextUser.id;
+        supabaseUser = nextUser;
+        if (isNewUser || !supabaseProfile) await loadSupabaseProfile();
+      }
+      updateAuthUI();
+      if (currentTab === "LEADERBOARD") loadLeaderboard();
+      const pm = document.getElementById("profile-modal");
+      if (pm && pm.style.display === "flex") {
+        profileDraftName = getProfileDisplayName(supabaseProfile || blankProfile(supabaseUser));
+        if (supabaseUser) renderProfileModal();
+        else closeProfileModal();
+      }
+    }
+
+    async function initSupabaseAuth() {
+      if (!SUPABASE_ENABLED) {
+        logMsg("Supabase keys not configured — cloud accounts, XP and leaderboard stay dormant.");
+        return;
+      }
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        // Defer async Supabase work out of the callback to avoid auth deadlocks.
+        setTimeout(() => {
+          const prevId = supabaseUser && supabaseUser.id;
+          const nextId = session && session.user && session.user.id;
+          if (prevId && prevId !== nextId) claimedXpKeys.clear();
+          handleSupabaseSession(session);
+        }, 0);
+      });
+
+      try {
+        // Never let an auth refresh hang the whole app boot.
+        const timeout = new Promise(resolve => setTimeout(() => resolve({ data: { session: null }, timedOut: true }), 4000));
+        const result = await Promise.race([supabaseClient.auth.getSession(), timeout]);
+        await handleSupabaseSession(result && result.data ? result.data.session : null);
+        logMsg("Supabase authentication ready.");
+      } catch (err) {
+        logMsg(`Supabase session error: ${err.message}`);
+      }
+
+      // Tidy the PKCE ?code= callback out of the address bar (never touches AniList's #hash).
+      setTimeout(() => {
+        try {
+          const url = new URL(window.location.href);
+          if (url.searchParams.has("code")) {
+            url.searchParams.delete("code");
+            history.replaceState(null, "", url.pathname + (url.search || "") + url.hash);
+          }
+        } catch (_) { /* no-op */ }
+      }, 1200);
+    }
+
+    /* ---------- Auth UI ---------- */
+    function handleAuthButtonClick() {
+      if (supabaseUser) openProfileModal();
+      else openAuthModal();
+    }
+
+    function updateAuthUI() {
+      const btn = document.getElementById("auth-btn");
+      if (!btn) return;
+      if (supabaseUser) {
+        const p = supabaseProfile || blankProfile(supabaseUser);
+        const level = getProfileLevel(p);
+        const name = escapeHtml(getProfileDisplayName(p));
+        const title = cosmeticLabel("titles", p.equipped_title);
+        const colorCss = cosmeticCss("nameColors", p.equipped_name_color);
+        const effectCss = cosmeticCss("nameEffects", p.equipped_name_effect);
+        btn.className = "user-pill";
+        btn.title = "Open Profile & Cosmetics";
+        btn.innerHTML = `<span class="up-level">Lv ${level}</span>` +
+          `<span class="up-name ${colorCss} ${effectCss}">${name}</span>` +
+          (title ? `<span class="up-title">${escapeHtml((title.icon || "") + " " + title.label)}</span>` : "");
+        return;
+      }
+      btn.className = "secondary";
+      btn.title = "";
+      if (userProfile) {
+        btn.textContent = userProfile.type === "anilist" ? `AniList: ${userProfile.name}` : `👤 ${userProfile.name}`;
+      } else {
+        btn.textContent = "Sign In";
+      }
+    }
+
+    function setAuthMode(mode) {
+      if (mode !== "signin" && mode !== "signup") return;
+      authMode = mode;
+      renderAuthModal();
+    }
+
+    function renderAuthModal() {
+      document.getElementById("modal-title").textContent = "Sign In to VexinStream";
+      document.getElementById("modal-desc").textContent = "Create a cloud account to earn XP, unlock level-gated cosmetics, and climb the leaderboard. AniList auto-sync can be linked any time.";
+      const body = document.getElementById("modal-body");
+      const redirectUrl = window.location.origin + window.location.pathname;
+      let html = "";
+
+      if (SUPABASE_ENABLED) {
+        html += `
+          <div class="auth-tabs">
+            <button type="button" class="auth-tab ${authMode === "signin" ? "active" : ""}" onclick="setAuthMode('signin')">Sign In</button>
+            <button type="button" class="auth-tab ${authMode === "signup" ? "active" : ""}" onclick="setAuthMode('signup')">Create Account</button>
+          </div>
+          <form onsubmit="submitEmailAuth(event)" style="display:flex; flex-direction:column; gap:0.55rem;">
+            <input type="email" id="auth-email" placeholder="Email address" autocomplete="email" required />
+            <input type="password" id="auth-password" placeholder="Password (min. 6 characters)" autocomplete="${authMode === "signin" ? "current-password" : "new-password"}" minlength="6" required />
+            <button type="submit" id="auth-submit-btn">${authMode === "signin" ? "Sign In with Email" : "Create Account"}</button>
+          </form>
+          <div class="auth-divider"><span>or</span></div>
+          <button type="button" class="secondary google-btn" onclick="signInWithGoogle()">
+            <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.2-7.9l-6.5 5C9.6 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+            Continue with Google
+          </button>
+          <p class="auth-msg" id="auth-msg"></p>
+          <div class="auth-hr"></div>
+        `;
+      } else {
+        html += `
+          <div class="auth-note">
+            <strong>Cloud accounts are not configured yet.</strong><br/>
+            Paste your Supabase project URL and anon key into <code>SUPABASE_URL</code> / <code>SUPABASE_ANON_KEY</code> near the top of the script, then run <code>supabase/schema.sql</code> in your Supabase SQL editor. Local + AniList accounts keep working in the meantime.
+          </div>
+          <div class="auth-hr"></div>
+        `;
+      }
+
+      if (userProfile) {
+        html += `
+          <div class="legacy-card">
+            <div class="label-sm">Connected Legacy Profile</div>
+            <div class="anilist-status">
+              ${userProfile.type === "anilist" ? "🟣 Signed in to AniList as" : "👤 Local profile:"} <strong>${escapeHtml(userProfile.name)}</strong>
+              ${userProfile.type === "anilist" ? "• auto-progress sync active" : ""}
+            </div>
+            <button class="secondary" onclick="closeAuthModal(); switchTab('WATCHLIST')">View My List (${watchlist.length})</button>
+            ${userProfile.type === "anilist" ? `<button class="secondary" onclick="syncAniListWatchlist().then(()=>pushToast('<strong>AniList synced!</strong>','ok'))">↻ Sync AniList Now</button>` : ""}
+            <button class="secondary" onclick="signOut()">Sign Out of Legacy Profile</button>
+          </div>
+        `;
+      } else {
+        html += `
+          <div class="legacy-card">
+            <div class="label-sm">Optional — AniList Auto-Sync</div>
+            <button class="secondary" onclick="startAniListLink()">🔗 Link AniList Account</button>
+            <div class="oauth-hint">
+              <strong>1-Time AniList Setup:</strong> Create a free client at <code>anilist.co/settings/developer</code> with Redirect URL <code>${escapeHtml(redirectUrl)}</code>, then paste your Client ID:
+              <input type="text" id="client-id-input" value="${escapeAttr(ANILIST_CLIENT_ID)}" placeholder="Paste AniList Client ID (e.g. 19482)" style="width:100%; margin-top:0.5rem;" />
+              <button class="secondary" style="margin-top:0.5rem;" onclick="signInAniList()">Continue with AniList OAuth</button>
+            </div>
+            <div class="auth-divider"><span>or local only</span></div>
+            <input type="text" id="username-input" placeholder="Enter a local display name..." />
+            <button class="secondary" onclick="signInLocal()">Continue with Local Profile</button>
+          </div>
+        `;
+      }
+
+      html += `<button class="secondary" onclick="closeAuthModal()">Cancel</button>`;
+      body.innerHTML = html;
+    }
+
+    function openAuthModal() {
+      if (supabaseUser) { openProfileModal(); return; }
+      renderAuthModal();
+      document.getElementById("auth-modal").style.display = "flex";
+    }
+
+    function closeAuthModal() {
+      document.getElementById("auth-modal").style.display = "none";
+    }
+
+    async function submitEmailAuth(e) {
+      e.preventDefault();
+      if (!supabaseClient) { openAuthModal(); return; }
+      const emailEl = document.getElementById("auth-email");
+      const passEl = document.getElementById("auth-password");
+      const submitBtn = document.getElementById("auth-submit-btn");
+      const msg = document.getElementById("auth-msg");
+      const email = (emailEl && emailEl.value || "").trim();
+      const password = (passEl && passEl.value) || "";
+      if (!email || password.length < 6) return;
+      const redirectUrl = window.location.origin + window.location.pathname;
+      const setMsg = (text, cls) => {
+        if (!msg) return;
+        msg.textContent = text;
+        msg.className = "auth-msg " + (cls || "");
+      };
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Please wait..."; }
+      try {
+        if (authMode === "signup") {
+          const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { display_name: email.split("@")[0].slice(0, 24) },
+              emailRedirectTo: redirectUrl
+            }
+          });
+          if (error) throw error;
+          if (data && data.session) {
+            setMsg("Account created — welcome to VexinStream!", "ok");
+            setTimeout(closeAuthModal, 650);
+          } else {
+            setMsg("Check your inbox to confirm your account, then sign in.", "ok");
+          }
+        } else {
+          const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          setMsg("Signed in!", "ok");
+          setTimeout(closeAuthModal, 350);
+        }
+      } catch (err) {
+        setMsg(err.message || "Authentication failed.", "err");
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = authMode === "signin" ? "Sign In with Email" : "Create Account";
+        }
+      }
+    }
+
+    async function signInWithGoogle() {
+      if (!supabaseClient) { renderAuthModal(); return; }
+      try {
+        const { error } = await supabaseClient.auth.signInWithOAuth({
+          provider: "google",
+          options: { redirectTo: window.location.origin + window.location.pathname }
+        });
+        if (error) throw error;
+      } catch (err) {
+        const msg = document.getElementById("auth-msg");
+        if (msg) {
+          msg.textContent = err.message || "Google sign-in failed.";
+          msg.className = "auth-msg err";
+        }
+      }
+    }
+
+    async function supabaseSignOut() {
+      try {
+        if (supabaseClient) await supabaseClient.auth.signOut();
+      } catch (err) {
+        logMsg(`Supabase sign out error: ${err.message}`);
+      }
+      supabaseUser = null;
+      supabaseProfile = null;
+      claimedXpKeys.clear();
+      closeProfileModal();
+      closeAuthModal();
+      updateAuthUI();
+      if (currentTab === "LEADERBOARD") loadLeaderboard();
+    }
+
+    /* Legacy local + AniList profiles (preserved from v6.0) */
+    function signInLocal() {
+      const input = document.getElementById("username-input");
+      const name = input ? input.value.trim() : "";
+      if (!name) return;
+      userProfile = { name, type: "local" };
+      localStorage.setItem("vexin_user", JSON.stringify(userProfile));
+      updateAuthUI();
+      closeAuthModal();
+    }
+
+    function signInAniList() {
+      const inputEl = document.getElementById("client-id-input");
+      const clientId = (inputEl ? inputEl.value.trim() : ANILIST_CLIENT_ID);
+      if (!clientId) {
+        alert("Please paste your AniList Client ID into the box first (free from anilist.co/settings/developer).");
+        return;
+      }
+      localStorage.setItem("vexin_anilist_client_id", clientId);
+      window.location.href = `https://anilist.co/api/v2/oauth/authorize?client_id=${encodeURIComponent(clientId)}&response_type=token`;
+    }
+
+    function startAniListLink() {
+      let clientId = localStorage.getItem("vexin_anilist_client_id") || ANILIST_CLIENT_ID || "";
+      if (!clientId) {
+        clientId = (prompt("Paste your free AniList Client ID (anilist.co/settings/developer):") || "").trim();
+        if (!clientId) return;
+        localStorage.setItem("vexin_anilist_client_id", clientId);
+      }
+      window.location.href = `https://anilist.co/api/v2/oauth/authorize?client_id=${encodeURIComponent(clientId)}&response_type=token`;
+    }
+
+    function signOut() {
+      userProfile = null;
+      localStorage.removeItem("vexin_user");
+      updateAuthUI();
+      closeAuthModal();
+      const pm = document.getElementById("profile-modal");
+      if (pm && pm.style.display === "flex") renderProfileModal();
+    }
+
+    function unlinkAniList() {
+      signOut();
+      if (supabaseUser) {
+        profileDraftName = profileDraftName || getProfileDisplayName(supabaseProfile || blankProfile(supabaseUser));
+        renderProfileModal();
+      }
+      pushToast("<strong>AniList unlinked.</strong> Your VexinStream account is still signed in.", "ok");
+    }
+
+    /* ---------- Profile & Cosmetics modal ---------- */
+    function openProfileModal() {
+      if (!supabaseUser) { openAuthModal(); return; }
+      profileDraftName = getProfileDisplayName(supabaseProfile || blankProfile(supabaseUser));
+      renderProfileModal();
+      document.getElementById("profile-modal").style.display = "flex";
+    }
+
+    function closeProfileModal() {
+      const modal = document.getElementById("profile-modal");
+      if (modal) modal.style.display = "none";
+    }
+
+    function stashProfileInputs() {
+      const nameEl = document.getElementById("profile-name-input");
+      if (nameEl) profileDraftName = nameEl.value;
+    }
+
+    function updateNamePreview(value) {
+      profileDraftName = value;
+      const el = document.getElementById("pc-name");
+      if (el) el.textContent = value || "Unnamed";
+    }
+
+    function cosmeticPreview(item, categoryKey) {
+      if (categoryKey === "titles") {
+        return `<span class="ci-title-preview">${escapeHtml((item.icon || "") + " " + item.label)}</span>`;
+      }
+      if (categoryKey === "nameColors" || categoryKey === "nameEffects") {
+        return `<span class="ci-aa ${item.css || ""}">Aa</span>`;
+      }
+      if (categoryKey === "avatarFrames") {
+        return `<span class="ci-frame-preview ${item.css || ""}"><span class="avatar-inner-dot"></span></span>`;
+      }
+      if (categoryKey === "banners") {
+        return `<span class="ci-banner-swatch ${item.css || ""}"></span>`;
+      }
+      return "";
+    }
+
+    function renderCosmeticGrid() {
+      const grid = document.getElementById("cosmetic-grid");
+      if (!grid) return;
+      const p = supabaseProfile || blankProfile(supabaseUser);
+      const level = getProfileLevel(p);
+      const equipped = p[COSMETIC_FIELD[activeCosmeticTab]];
+      const list = COSMETIC_CATALOG[activeCosmeticTab] || [];
+      grid.innerHTML = list.map(item => {
+        const locked = level < item.requiredLevel;
+        const isEquipped = equipped === item.id;
+        const clickAttr = locked
+          ? `disabled title="Unlocks at Level ${item.requiredLevel}"`
+          : `onclick="equipCosmetic('${activeCosmeticTab}','${item.id}')"`;
+        return `
+          <button type="button" class="cosmetic-item ${locked ? "locked" : ""} ${isEquipped ? "equipped" : ""}" ${clickAttr}>
+            <div class="ci-preview">${cosmeticPreview(item, activeCosmeticTab)}</div>
+            <div class="ci-label">${escapeHtml(item.label)}</div>
+            ${locked ? `<span class="ci-lock">🔒 Lvl ${item.requiredLevel}</span>` : isEquipped ? `<span class="ci-equipped">✓</span>` : ""}
+          </button>`;
+      }).join("");
+    }
+
+    function renderProfileModal() {
+      const body = document.getElementById("profile-modal-body");
+      if (!body) return;
+      if (!supabaseUser) { body.innerHTML = ""; return; }
+      const p = supabaseProfile || blankProfile(supabaseUser);
+      const level = getProfileLevel(p);
+      const prog = xpProgress(p.xp);
+      const name = profileDraftName || getProfileDisplayName(p);
+      const avatar = getProfileAvatar(p);
+      const bannerCss = cosmeticCss("banners", p.equipped_banner) || "pbn-sunset-drift";
+      const frameCss = cosmeticCss("avatarFrames", p.equipped_avatar_frame);
+      const colorCss = cosmeticCss("nameColors", p.equipped_name_color);
+      const effectCss = cosmeticCss("nameEffects", p.equipped_name_effect);
+      const title = cosmeticLabel("titles", p.equipped_title);
+      const initial = escapeHtml((getProfileDisplayName(p) || "?").trim().charAt(0).toUpperCase() || "?");
+      const avatarHtml = avatar
+        ? `<img src="${escapeAttr(avatar)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" /><span class="avatar-initial" style="display:none;">${initial}</span>`
+        : `<span class="avatar-initial">${initial}</span>`;
+
+      body.innerHTML = `
+        <div class="profile-card">
+          <div class="profile-card-banner ${bannerCss}"></div>
+          <div class="profile-card-inner">
+            <div class="avatar-wrap ${frameCss}">${avatarHtml}<span class="avatar-level-badge">Lv ${level}</span></div>
+            <div class="profile-main">
+              <div class="pc-name ${colorCss} ${effectCss}" id="pc-name">${escapeHtml(name)}</div>
+              <div class="pc-title-row">
+                ${title ? `<span class="pc-title-pill">${escapeHtml((title.icon || "") + " " + title.label)}</span>` : ""}
+                <span class="pc-level-tag">${p.episodes_watched || 0} episodes watched</span>
+              </div>
+              <div class="pc-xp-track"><div class="pc-xp-fill" style="width:${prog.pct.toFixed(1)}%"></div></div>
+              <div class="pc-xp-label">${prog.total} XP • ${Math.max(0, prog.next - prog.total)} XP to Level ${level + 1}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-controls">
+          <div class="profile-field">
+            <label for="profile-name-input">Display Name</label>
+            <input type="text" id="profile-name-input" maxlength="24" value="${escapeAttr(name)}" oninput="updateNamePreview(this.value)" placeholder="Your display name" />
+          </div>
+          <div class="toggle-row">
+            <div>
+              <span>Show on Leaderboard</span>
+              <span class="toggle-sub">Public profiles appear in the global Top 50 list.</span>
+            </div>
+            <input type="checkbox" id="profile-public-toggle" ${p.is_public ? "checked" : ""} onchange="saveProfilePrivacy(this.checked)" />
+          </div>
+        </div>
+
+        <div class="cosmetic-tabs" role="tablist">
+          ${Object.keys(COSMETIC_CATALOG).map(key => `
+            <button type="button" class="cosmetic-tab ${activeCosmeticTab === key ? "active" : ""}" onclick="switchCosmeticTab('${key}')">${COSMETIC_TAB_LABELS[key]}</button>
+          `).join("")}
+        </div>
+        <div class="cosmetic-grid" id="cosmetic-grid"></div>
+
+        <div class="profile-actions">
+          <button onclick="saveDisplayName()">💾 Save Name</button>
+          <button class="secondary" onclick="closeProfileModal()">Done</button>
+          <button class="secondary" onclick="supabaseSignOut()">Sign Out</button>
+        </div>
+
+        <div class="anilist-link-box">
+          <div class="label-sm">AniList Episode Sync (optional)</div>
+          ${userProfile && userProfile.type === "anilist" ? `
+            <div class="anilist-status">🟣 Linked as <strong>${escapeHtml(userProfile.name)}</strong> • auto-progress sync active</div>
+            <div style="display:flex; gap:0.45rem; flex-wrap:wrap;">
+              <button class="secondary" onclick="syncAniListWatchlist().then(()=>pushToast('<strong>AniList synced!</strong>','ok'))">↻ Sync Watchlist</button>
+              <button class="secondary" onclick="unlinkAniList()">Unlink AniList</button>
+            </div>
+          ` : `
+            <div class="anilist-status">Link AniList to keep its watchlist + 82% episode auto-sync alongside your VexinStream account.</div>
+            <button class="secondary" onclick="startAniListLink()">🔗 Link AniList Account</button>
+          `}
+          ${!SUPABASE_ENABLED ? `<div class="toggle-sub">Supabase is not configured — XP and cosmetics are preview-only until keys are added.</div>` : ""}
+        </div>
+      `;
+
+      renderCosmeticGrid();
+    }
+
+    function switchCosmeticTab(categoryKey) {
+      if (!COSMETIC_CATALOG[categoryKey]) return;
+      stashProfileInputs();
+      activeCosmeticTab = categoryKey;
+      renderProfileModal();
+    }
+
+    async function equipCosmetic(categoryKey, value) {
+      if (!supabaseUser) return;
+      const item = cosmeticLabel(categoryKey, value);
+      if (!item) return;
+      const p = supabaseProfile || blankProfile(supabaseUser);
+      const level = getProfileLevel(p);
+      if (level < item.requiredLevel) {
+        pushToast(`<strong>🔒 Locked:</strong> reach Level ${item.requiredLevel} to equip ${escapeHtml(item.label)}.`, "err");
+        return;
+      }
+      stashProfileInputs();
+      p[COSMETIC_FIELD[categoryKey]] = value;
+      supabaseProfile = p;
+      updateAuthUI();
+      renderProfileModal();
+      if (!supabaseClient) return;
+      try {
+        const { error } = await supabaseClient.rpc("equip_cosmetic", {
+          p_category: COSMETIC_DB_CATEGORY[categoryKey],
+          p_value: value
+        });
+        if (error) throw error;
+      } catch (err) {
+        pushToast(`<strong>Could not equip:</strong> ${escapeHtml(err.message)}`, "err");
+        stashProfileInputs();
+        await loadSupabaseProfile();
+        updateAuthUI();
+        renderProfileModal();
+      }
+    }
+
+    async function saveDisplayName() {
+      if (!supabaseUser) return;
+      const input = document.getElementById("profile-name-input");
+      const name = (input ? input.value : "").trim().slice(0, 24);
+      if (!name) {
+        pushToast("<strong>Pick a display name first.</strong>", "err");
+        return;
+      }
+      profileDraftName = name;
+      const p = supabaseProfile || blankProfile(supabaseUser);
+      p.display_name = name;
+      supabaseProfile = p;
+      updateAuthUI();
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from("profiles").update({ display_name: name }).eq("id", supabaseUser.id);
+          if (error) throw error;
+          pushToast("<strong>Display name saved.</strong>", "ok");
+        } catch (err) {
+          pushToast(`<strong>Could not save name:</strong> ${escapeHtml(err.message)}`, "err");
+        }
+      }
+      stashProfileInputs();
+      renderProfileModal();
+      if (currentTab === "LEADERBOARD") loadLeaderboard();
+    }
+
+    async function saveProfilePrivacy(isPublic) {
+      if (!supabaseUser) return;
+      const p = supabaseProfile || blankProfile(supabaseUser);
+      p.is_public = !!isPublic;
+      supabaseProfile = p;
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from("profiles").update({ is_public: !!isPublic }).eq("id", supabaseUser.id);
+          if (error) throw error;
+          pushToast(isPublic
+            ? "<strong>You're now on the leaderboard.</strong>"
+            : "<strong>Your profile is now private.</strong>", "ok");
+        } catch (err) {
+          pushToast(`<strong>Privacy update failed:</strong> ${escapeHtml(err.message)}`, "err");
+        }
+      }
+      if (currentTab === "LEADERBOARD") loadLeaderboard();
+    }
+
+    /* ---------- XP awarding (82% / Next / N) ---------- */
+    async function awardWatchXp(anime, ep) {
+      if (!supabaseClient || !supabaseUser || !anime) return;
+      const animeId = Number(anime.id);
+      const episodeNum = Number(ep);
+      if (!animeId || !episodeNum) return;
+      const key = `${animeId}:${episodeNum}`;
+      if (claimedXpKeys.has(key)) return;           // dedupe every timeupdate tick
+      claimedXpKeys.add(key);
+      try {
+        const { data, error } = await supabaseClient.rpc("award_watch_xp", {
+          p_anime_id: animeId,
+          p_episode_num: episodeNum
+        });
+        if (error) throw error;
+        if (data && data.awarded === true) applyXpResult(data);
+      } catch (err) {
+        logMsg(`XP award failed: ${err.message}`);
+      }
+    }
+
+    function applyXpResult(data) {
+      const p = supabaseProfile || blankProfile(supabaseUser);
+      p.xp = Number(data.total_xp) || p.xp;
+      p.level = Number(data.level) || levelFromXp(p.xp);
+      if (typeof data.episodes_watched === "number") p.episodes_watched = data.episodes_watched;
+      supabaseProfile = p;
+      updateAuthUI();
+      pushToast(`<span class="xp-toast-icon">⚡</span><span><strong>+${Number(data.xp) || XP_PER_EPISODE} XP!</strong> Episode cleared — total ${p.xp} XP.</span>`);
+      if (data.leveled_up) showLevelUpBanner(data);
+      if (currentTab === "LEADERBOARD") loadLeaderboard();
+      const pm = document.getElementById("profile-modal");
+      if (pm && pm.style.display === "flex") {
+        stashProfileInputs();
+        renderProfileModal();
+      }
+    }
+
+    /* ---------- Global leaderboard ---------- */
+    function leaderboardRowHtml(p, rank, isMe) {
+      const level = getProfileLevel(p);
+      const name = getProfileDisplayName(p);
+      const avatar = getProfileAvatar(p);
+      const bannerCss = cosmeticCss("banners", p.equipped_banner) || "pbn-sunset-drift";
+      const frameCss = cosmeticCss("avatarFrames", p.equipped_avatar_frame);
+      const colorCss = cosmeticCss("nameColors", p.equipped_name_color);
+      const effectCss = cosmeticCss("nameEffects", p.equipped_name_effect);
+      const title = cosmeticLabel("titles", p.equipped_title);
+      const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : `#${rank}`;
+      const initial = escapeHtml((name || "?").trim().charAt(0).toUpperCase() || "?");
+      const avatarHtml = avatar
+        ? `<img src="${escapeAttr(avatar)}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';" /><span class="avatar-initial" style="display:none;">${initial}</span>`
+        : `<span class="avatar-initial">${initial}</span>`;
+
+      return `
+        <div class="lb-row ${isMe ? "me" : ""}">
+          <div class="lb-banner-tint ${bannerCss}"></div>
+          <div class="lb-rank ${rank <= 3 ? "top" : ""}">${medal}</div>
+          <div class="avatar-wrap sm lb-avatar-wrap ${frameCss}">${avatarHtml}</div>
+          <div style="min-width:0;">
+            <div class="lb-name-line">
+              <span class="lb-name ${colorCss} ${effectCss}">${escapeHtml(name)}</span>
+              ${title ? `<span class="lb-title-pill">${escapeHtml((title.icon || "") + " " + title.label)}</span>` : ""}
+            </div>
+            <div class="lb-sub">Level ${level} • ${p.episodes_watched || 0} episodes watched${isMe ? " • You" : ""}</div>
+          </div>
+          <div class="lb-stats">
+            <div class="lb-xp">${Number(p.xp) || 0} XP</div>
+            <div class="lb-lvl">Lv ${level}</div>
+          </div>
+        </div>`;
+    }
+
+    async function loadLeaderboard() {
+      const listEl = document.getElementById("lb-list");
+      const meSlot = document.getElementById("lb-me-slot");
+      const subEl = document.getElementById("lb-subtitle");
+      if (!listEl || !meSlot) return;
+      meSlot.innerHTML = "";
+      if (!SUPABASE_ENABLED) {
+        subEl.textContent = "Cloud leaderboard is not configured yet";
+        listEl.innerHTML = `<div class="lb-empty">🏆 <strong>Leaderboard coming online.</strong><br/>Add your Supabase URL + anon key, then run <code>supabase/schema.sql</code> to start tracking XP across VexinStream.</div>`;
+        return;
+      }
+      listEl.innerHTML = `<div class="lb-empty">Loading the Top 50...</div>`;
+      try {
+        const { data, error } = await supabaseClient
+          .from("profiles")
+          .select("*")
+          .eq("is_public", true)
+          .order("xp", { ascending: false })
+          .limit(50);
+        if (error) throw error;
+
+        const rows = data || [];
+        subEl.textContent = `${rows.length} public profile${rows.length === 1 ? "" : "s"} ranked by total XP`;
+        if (rows.length === 0) {
+          listEl.innerHTML = `<div class="lb-empty">No public profiles yet. Be the first — watch an episode, then enable <strong>Show on Leaderboard</strong> in your profile!</div>`;
+          return;
+        }
+
+        const myId = supabaseProfile && supabaseProfile.id;
+        let myIndex = -1;
+        listEl.innerHTML = rows.map((p, index) => {
+          const isMe = !!myId && p.id === myId;
+          if (isMe) myIndex = index;
+          return leaderboardRowHtml(p, index + 1, isMe);
+        }).join("");
+
+        if (supabaseProfile) {
+          if (myIndex >= 0) {
+            meSlot.innerHTML = `<div class="lb-me-card">✨ You're ranked <strong>#${myIndex + 1}</strong> globally. Keep watching to climb!</div>`;
+          } else if (supabaseProfile.is_public) {
+            const myXp = Number(supabaseProfile.xp) || 0;
+            const { count } = await supabaseClient
+              .from("profiles")
+              .select("id", { count: "exact", head: true })
+              .eq("is_public", true)
+              .gt("xp", myXp);
+            const rank = (count || 0) + 1;
+            meSlot.innerHTML = `<div class="lb-me-card">
+                <div>📍 <strong>Your Rank: #${rank}</strong> • ${myXp} XP • Level ${getProfileLevel(supabaseProfile)}</div>
+                <button class="secondary" onclick="openProfileModal()">Customize Profile</button>
+              </div>`;
+          } else {
+            meSlot.innerHTML = `<div class="lb-me-card">
+                <div>🔒 Your profile is private. Enable <strong>Show on Leaderboard</strong> to claim your rank.</div>
+                <button class="secondary" onclick="openProfileModal()">Open Profile</button>
+              </div>`;
+          }
+        }
+      } catch (err) {
+        logMsg(`Leaderboard load failed: ${err.message}`);
+        listEl.innerHTML = `<div class="lb-empty">Could not load the leaderboard.<br/><span style="font-size:0.8rem;">${escapeHtml(err.message)}</span><br/><br/>If this is a fresh project, run <code>supabase/schema.sql</code> first.</div>`;
+      }
+    }
+
+    function isInWatchlist(id) {
+      return watchlist.some(item => item.id === id);
+    }
+
+    async function toggleWatchlist(animeObj = currentAnime) {
+      if (!animeObj) return;
+      const exists = isInWatchlist(animeObj.id);
+      if (exists) {
+        watchlist = watchlist.filter(item => item.id !== animeObj.id);
+      } else {
+        watchlist.unshift(animeObj);
+      }
+      localStorage.setItem("vexin_watchlist", JSON.stringify(watchlist));
+      updateWatchlistButton();
+      if (currentTab === "WATCHLIST") applyFilters();
+
+      if (!exists && userProfile && userProfile.type === "anilist" && userProfile.token) {
+        try {
+          await fetch(ANILIST_API, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${userProfile.token}`
+            },
+            body: JSON.stringify({
+              query: `mutation ($mediaId: Int) { SaveMediaListEntry(mediaId: $mediaId, status: CURRENT) { id } }`,
+              variables: { mediaId: animeObj.id }
+            })
+          });
+          logMsg(`Saved "${getAnimeTitle(animeObj)}" to AniList.`);
+        } catch (e) {
+          logMsg(`AniList save error: ${e.message}`);
+        }
+      }
+    }
+
+    function updateWatchlistButton() {
+      const btn = document.getElementById("watchlist-toggle-btn");
+      if (!btn || !currentAnime) return;
+      btn.textContent = isInWatchlist(currentAnime.id) ? "✓ In My List" : "+ My List";
+    }
+
+    /* Continue Watching + Timestamp Resume */
+    function formatSeconds(sec) {
+      if (!sec || isNaN(sec) || sec < 1) return "";
+      const mins = Math.floor(sec / 60);
+      const rem = Math.floor(sec % 60);
+      return `${mins}:${String(rem).padStart(2, "0")}`;
+    }
+
+    function getSavedEpisodeTimestamp(animeId, ep) {
+      const hit = watchHistory.find(item => item.anime.id === animeId && item.ep === ep);
+      return hit && hit.timestamp ? Number(hit.timestamp) : 0;
+    }
+
+    function saveWatchProgress(anime, ep, timestamp = null, duration = null) {
+      if (!anime) return;
+      const existing = watchHistory.find(item => item.anime.id === anime.id && item.ep === ep);
+      const finalTime = timestamp !== null ? Math.floor(timestamp) : (existing ? existing.timestamp || 0 : 0);
+      const finalDur = duration !== null ? Math.floor(duration) : (existing ? existing.duration || 0 : 0);
+
+      watchHistory = watchHistory.filter(item => item.anime.id !== anime.id);
+      watchHistory.unshift({
+        anime,
+        ep,
+        timestamp: finalTime,
+        duration: finalDur,
+        updatedAt: Date.now()
+      });
+      if (watchHistory.length > 12) watchHistory = watchHistory.slice(0, 12);
+      localStorage.setItem("vexin_history", JSON.stringify(watchHistory));
+      renderContinueWatching();
+    }
+
+    function removeHistoryItem(event, animeId) {
+      event.stopPropagation();
+      watchHistory = watchHistory.filter(item => item.anime.id !== animeId);
+      localStorage.setItem("vexin_history", JSON.stringify(watchHistory));
+      renderContinueWatching();
+    }
+
+    function clearHistory() {
+      watchHistory = [];
+      localStorage.removeItem("vexin_history");
+      renderContinueWatching();
+    }
+
+    function renderContinueWatching() {
+      const section = document.getElementById("continue-section");
+      const strip = document.getElementById("continue-strip");
+      if (!watchHistory || watchHistory.length === 0 || currentTab === "SCHEDULE" || currentTab === "LEADERBOARD") {
+        section.style.display = "none";
+        return;
+      }
+      section.style.display = "block";
+      strip.innerHTML = "";
+      watchHistory.forEach(entry => {
+        const a = entry.anime;
+        const title = getAnimeTitle(a);
+        const timeStr = entry.timestamp > 10 ? ` • ${formatSeconds(entry.timestamp)}` : "";
+        const pct = (entry.timestamp > 0 && entry.duration > 0)
+          ? Math.min(100, Math.round((entry.timestamp / entry.duration) * 100))
+          : 0;
+
+        const card = document.createElement("div");
+        card.className = "cw-card";
+        card.innerHTML = `
+          <img src="${a.coverImage.large}" alt="${title}" loading="lazy" />
+          <div class="cw-info">
+            <div class="cw-title">${title}</div>
+            <div class="cw-ep">Continue Ep ${entry.ep}${timeStr}</div>
+          </div>
+          <button class="cw-remove" title="Remove" onclick="removeHistoryItem(event, ${a.id})">✕</button>
+          ${pct > 0 ? `<div class="cw-progress-track"><div class="cw-progress-fill" style="width:${pct}%"></div></div>` : ""}
+        `;
+        card.onclick = () => openPlayer(a, entry.ep);
+        strip.appendChild(card);
+      });
+    }
+
+    /* AniList API Helper */
+    async function fetchAniList(query, variables = {}) {
+      const res = await fetch(ANILIST_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ query, variables })
+      });
+      const json = await res.json();
+      return json.data;
+    }
+
+    const MEDIA_FIELDS = `
+      id
+      idMal
+      episodes
+      averageScore
+      seasonYear
+      format
+      status
+      genres
+      synonyms
+      isAdult
+      bannerImage
+      description(asHtml: false)
+      nextAiringEpisode { episode airingAt }
+      studios(isMain: true) { nodes { name } }
+      title { english romaji }
+      coverImage { large extraLarge }
+    `;
+
+    function applyMaturityArgs(mediaArgs) {
+      if (settings.maturity === "SFW") {
+        mediaArgs.push("isAdult: false");
+        mediaArgs.push('genre_not_in: ["Ecchi", "Hentai"]');
+      } else if (settings.maturity === "STANDARD") {
+        mediaArgs.push("isAdult: false");
+      }
+    }
+
+    function filterByMaturityClient(list) {
+      if (settings.maturity === "SFW") {
+        return list.filter(a => !a.isAdult && !(a.genres || []).includes("Ecchi"));
+      }
+      if (settings.maturity === "STANDARD") {
+        return list.filter(a => !a.isAdult);
+      }
+      return list;
+    }
+
+    /* Navigation Tabs & Multi-Filter Logic */
+    function resetHome() {
+      document.getElementById("search-input").value = "";
+      currentSearchTerm = "";
+      clearFilters(false);
+      closePlayer();
+      switchTab("TRENDING");
+    }
+
+    function clearFilters(reload = true) {
+      selectedGenres = [];
+      document.querySelectorAll(".genre-chip").forEach(c => c.classList.remove("selected"));
+      document.getElementById("genre-toggle-btn").textContent = "🏷️ Genres (0) ▾";
+      document.getElementById("year-filter").value = "";
+      document.getElementById("format-filter").value = "";
+      document.getElementById("status-filter").value = "";
+      document.getElementById("clear-filters-btn").style.display = "none";
+      if (reload) applyFilters();
+    }
+
+    function hasActiveFilters() {
+      return selectedGenres.length > 0 ||
+        document.getElementById("year-filter").value !== "" ||
+        document.getElementById("format-filter").value !== "" ||
+        document.getElementById("status-filter").value !== "";
+    }
+
+    function applyFilters() {
+      if (currentTab === "LEADERBOARD") return;
+      const year = document.getElementById("year-filter").value;
+      const format = document.getElementById("format-filter").value;
+      const status = document.getElementById("status-filter").value;
+      document.getElementById("clear-filters-btn").style.display = hasActiveFilters() ? "inline-block" : "none";
+
+      if (currentTab === "WATCHLIST") {
+        const filtered = filterByMaturityClient(watchlist).filter(a => {
+          const matchGenres = selectedGenres.every(g => a.genres && a.genres.includes(g));
+          const matchYear = !year || Number(a.seasonYear) === Number(year);
+          const matchFormat = !format || a.format === format;
+          const matchStatus = !status || a.status === status;
+          return matchGenres && matchYear && matchFormat && matchStatus;
+        });
+        lastLoadedList = filtered;
+        document.getElementById("result-count").textContent = `${filtered.length} saved`;
+        renderGrid(filtered);
+        return;
+      }
+
+      if (currentTab === "SEARCH" && currentSearchTerm) {
+        runSearchQuery(currentSearchTerm);
+      } else {
+        switchTab(currentTab === "SEARCH" ? "TRENDING" : currentTab);
+      }
+    }
+
+    async function switchTab(tab) {
+      currentTab = tab;
+      if (tab !== "SEARCH") currentSearchTerm = "";
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+
+      const scheduleSec = document.getElementById("schedule-section");
+      const catalogSec = document.getElementById("catalog-section");
+      const heroSec = document.getElementById("hero-banner");
+      const leaderboardSec = document.getElementById("leaderboard-section");
+
+      if (tab === "LEADERBOARD") {
+        heroSec.style.display = "none";
+        catalogSec.style.display = "none";
+        document.getElementById("continue-section").style.display = "none";
+        scheduleSec.style.display = "none";
+        leaderboardSec.style.display = "block";
+        loadLeaderboard();
+        return;
+      }
+
+      leaderboardSec.style.display = "none";
+
+      if (tab === "SCHEDULE") {
+        heroSec.style.display = "none";
+        catalogSec.style.display = "none";
+        document.getElementById("continue-section").style.display = "none";
+        scheduleSec.style.display = "block";
+        setScheduleToday();
+        return;
+      }
+
+      scheduleSec.style.display = "none";
+      catalogSec.style.display = "block";
+      renderContinueWatching();
+
+      if (tab === "WATCHLIST") {
+        heroSec.style.display = "none";
+        document.getElementById("section-title").textContent = "My Saved Watchlist";
+        applyFilters();
+        return;
+      }
+
+      const year = document.getElementById("year-filter").value;
+      const format = document.getElementById("format-filter").value;
+      const status = document.getElementById("status-filter").value;
+
+      let sort = "TRENDING_DESC";
+      let heading = "Trending Now";
+      const variables = {};
+      const argDefs = [];
+      const mediaArgs = ["type: ANIME", `sort: ${sort}`];
+      applyMaturityArgs(mediaArgs);
+
+      if (tab === "AIRING") {
+        sort = "POPULARITY_DESC";
+        heading = "Top Currently Airing";
+        mediaArgs[1] = `sort: ${sort}`;
+        if (!status) mediaArgs.push("status: RELEASING");
+      } else if (tab === "POPULAR") {
+        sort = "POPULARITY_DESC";
+        heading = "All-Time Most Popular";
+        mediaArgs[1] = `sort: ${sort}`;
+      } else if (tab === "MOVIES") {
+        sort = "POPULARITY_DESC";
+        heading = "Popular Anime Movies";
+        mediaArgs[1] = `sort: ${sort}`;
+        if (!format) mediaArgs.push("format: MOVIE");
+      }
+
+      if (selectedGenres.length > 0) {
+        argDefs.push("$genres: [String]");
+        mediaArgs.push("genre_in: $genres");
+        variables.genres = selectedGenres;
+        heading += ` • ${selectedGenres.join(" + ")}`;
+      }
+      if (year) {
+        argDefs.push("$year: Int");
+        mediaArgs.push("seasonYear: $year");
+        variables.year = Number(year);
+        heading += ` (${year})`;
+      }
+      if (format) {
+        argDefs.push("$format: MediaFormat");
+        mediaArgs.push("format: $format");
+        variables.format = format;
+      }
+      if (status) {
+        argDefs.push("$status: MediaStatus");
+        mediaArgs.push("status: $status");
+        variables.status = status;
+      }
+
+      document.getElementById("section-title").textContent = heading;
+      const varHeader = argDefs.length ? `(${argDefs.join(", ")})` : "";
+      const query = `
+        query ${varHeader} {
+          Page(perPage: 24) {
+            media(${mediaArgs.join(", ")}) {
+              ${MEDIA_FIELDS}
+            }
+          }
+        }`;
+
+      const data = await fetchAniList(query, variables);
+      const list = filterByMaturityClient(data.Page.media || []);
+      lastLoadedList = list;
+      document.getElementById("result-count").textContent = `${list.length} titles`;
+
+      if (tab === "TRENDING" && !hasActiveFilters() && list.length > 0) {
+        renderHero(list[0]);
+      } else {
+        heroSec.style.display = "none";
+      }
+      renderGrid(list);
+    }
+
+    function renderHero(anime) {
+      currentHeroAnime = anime;
+      const hero = document.getElementById("hero-banner");
+      const title = getAnimeTitle(anime);
+      const altTitle = getAltTitle(anime);
+      const cleanDesc = (anime.description || "Stream in HD on VexinStream.").replace(/<[^>]*>/g, "");
+      const score = anime.averageScore ? `★ ${(anime.averageScore / 10).toFixed(1)}` : "Trending";
+      const genres = (anime.genres || []).slice(0, 3).join(" • ");
+
+      document.getElementById("hero-title").textContent = title;
+      document.getElementById("hero-alt-title").textContent = altTitle;
+      document.getElementById("hero-meta").textContent = `${score} • ${anime.format || "TV"} • ${anime.seasonYear || "2026"} ${genres ? "• " + genres : ""}`;
+      document.getElementById("hero-desc").textContent = cleanDesc;
+      document.getElementById("hero-poster").src = anime.coverImage.extraLarge || anime.coverImage.large;
+      document.getElementById("hero-watch-btn").onclick = () => openPlayer(anime, 1);
+      document.getElementById("hero-list-btn").onclick = () => toggleWatchlist(anime);
+      hero.style.display = "grid";
+    }
+
+    function handleSearch(e) {
+      e.preventDefault();
+      const term = document.getElementById("search-input").value.trim();
+      if (!term) return switchTab("TRENDING");
+      currentTab = "SEARCH";
+      currentSearchTerm = term;
+      runSearchQuery(term);
+    }
+
+    async function runSearchQuery(term) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("schedule-section").style.display = "none";
+      document.getElementById("leaderboard-section").style.display = "none";
+      document.getElementById("hero-banner").style.display = "none";
+      document.getElementById("catalog-section").style.display = "block";
+      renderContinueWatching();
+
+      const year = document.getElementById("year-filter").value;
+      const format = document.getElementById("format-filter").value;
+      const status = document.getElementById("status-filter").value;
+
+      const variables = { search: term };
+      const argDefs = ["$search: String"];
+      const mediaArgs = ["type: ANIME", "search: $search", "sort: POPULARITY_DESC"];
+      applyMaturityArgs(mediaArgs);
+
+      if (selectedGenres.length > 0) {
+        argDefs.push("$genres: [String]");
+        mediaArgs.push("genre_in: $genres");
+        variables.genres = selectedGenres;
+      }
+      if (year) {
+        argDefs.push("$year: Int");
+        mediaArgs.push("seasonYear: $year");
+        variables.year = Number(year);
+      }
+      if (format) {
+        argDefs.push("$format: MediaFormat");
+        mediaArgs.push("format: $format");
+        variables.format = format;
+      }
+      if (status) {
+        argDefs.push("$status: MediaStatus");
+        mediaArgs.push("status: $status");
+        variables.status = status;
+      }
+
+      document.getElementById("section-title").textContent = `Search: "${term}"`;
+      const query = `
+        query (${argDefs.join(", ")}) {
+          Page(perPage: 24) {
+            media(${mediaArgs.join(", ")}) {
+              ${MEDIA_FIELDS}
+            }
+          }
+        }`;
+      const data = await fetchAniList(query, variables);
+      const list = filterByMaturityClient(data.Page.media || []);
+      lastLoadedList = list;
+      document.getElementById("result-count").textContent = `${list.length} matches`;
+      renderGrid(list);
+    }
+
+    async function playRandomAnime() {
+      const randomPage = Math.floor(Math.random() * 15) + 1;
+      const mediaArgs = ["type: ANIME", "sort: POPULARITY_DESC"];
+      applyMaturityArgs(mediaArgs);
+      const query = `
+        query ($page: Int) {
+          Page(page: $page, perPage: 20) {
+            media(${mediaArgs.join(", ")}) {
+              ${MEDIA_FIELDS}
+            }
+          }
+        }`;
+      const data = await fetchAniList(query, { page: randomPage });
+      const pool = filterByMaturityClient(data.Page.media || []);
+      if (pool.length > 0) {
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        openPlayer(pick, 1);
+      }
+    }
+
+    function renderGrid(list) {
+      const grid = document.getElementById("anime-grid");
+      grid.innerHTML = "";
+      if (!list || list.length === 0) {
+        grid.innerHTML = `<p style="color:var(--muted); grid-column:1/-1;">No anime found matching your current filters or maturity level.</p>`;
+        return;
+      }
+      list.forEach(anime => {
+        const title = getAnimeTitle(anime);
+        const totalEps = anime.episodes || (anime.nextAiringEpisode ? anime.nextAiringEpisode.episode - 1 : "?");
+        const score = anime.averageScore ? `★ ${(anime.averageScore / 10).toFixed(1)}` : "";
+        const isEcchi = (anime.genres || []).includes("Ecchi");
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          ${score ? `<div class="score-badge">${score}</div>` : ""}
+          <div class="format-badge">${anime.format || "TV"}</div>
+          ${isEcchi ? `<div class="ecchi-badge">ECCHI</div>` : ""}
+          <img src="${anime.coverImage.large}" alt="${title}" loading="lazy" />
+          <div class="card-body">
+            <div class="card-title">${title}</div>
+            <div class="card-meta">${anime.seasonYear || "TBA"} • ${totalEps} Eps</div>
+          </div>`;
+        card.onclick = () => openPlayer(anime, 1);
+        grid.appendChild(card);
+      });
+    }
+
+    /* Release Schedule with Adjustable Date */
+    function formatDateInput(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function setScheduleToday() {
+      scheduleDate = new Date();
+      const formatted = formatDateInput(scheduleDate);
+      document.getElementById("schedule-date-picker").value = formatted;
+      loadScheduleByDate(formatted);
+    }
+
+    function shiftScheduleDate(days) {
+      scheduleDate.setDate(scheduleDate.getDate() + days);
+      const formatted = formatDateInput(scheduleDate);
+      document.getElementById("schedule-date-picker").value = formatted;
+      loadScheduleByDate(formatted);
+    }
+
+    async function loadScheduleByDate(dateStr) {
+      if (!dateStr) return;
+      const [y, m, d] = dateStr.split("-").map(Number);
+      scheduleDate = new Date(y, m - 1, d);
+      const startSec = Math.floor(new Date(y, m - 1, d, 0, 0, 0).getTime() / 1000);
+      const endSec = startSec + 86399;
+
+      document.getElementById("schedule-subtitle").textContent = `Schedule for ${scheduleDate.toDateString()} (Your Local Time)`;
+      const listEl = document.getElementById("schedule-list");
+      listEl.innerHTML = `<p style="color:var(--muted);">Loading release schedule...</p>`;
+
+      const query = `
+        query ($start: Int, $end: Int) {
+          Page(perPage: 50) {
+            airingSchedules(airingAt_greater: $start, airingAt_lesser: $end, sort: TIME) {
+              airingAt
+              episode
+              media {
+                ${MEDIA_FIELDS}
+              }
+            }
+          }
+        }`;
+      const data = await fetchAniList(query, { start: startSec, end: endSec });
+      const raw = (data.Page.airingSchedules || []).filter(s => s.media);
+      lastScheduleItems = raw.filter(s => filterByMaturityClient([s.media]).length > 0);
+      renderScheduleItems(lastScheduleItems);
+    }
+
+    function renderScheduleItems(items) {
+      const listEl = document.getElementById("schedule-list");
+      listEl.innerHTML = "";
+      if (!items || items.length === 0) {
+        listEl.innerHTML = `<p style="color:var(--muted);">No scheduled releases found for this date (under your current maturity filter).</p>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const anime = item.media;
+        const title = getAnimeTitle(anime);
+        const airTime = new Date(item.airingAt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const card = document.createElement("div");
+        card.className = "sched-card";
+        card.innerHTML = `
+          <img src="${anime.coverImage.large}" alt="${title}" loading="lazy" />
+          <div>
+            <div class="sched-time">⏰ ${airTime}</div>
+            <div class="sched-title">${title}</div>
+            <div class="sched-ep">Episode ${item.episode}</div>
+          </div>`;
+        card.onclick = () => openPlayer(anime, item.episode);
+        listEl.appendChild(card);
+      });
+    }
+
+    /* Strict Player Unmount & RAM-Capped HLS Streaming */
+    function stopMedia() {
+      const video = document.getElementById("hls-video");
+      const iframe = document.getElementById("video-frame");
+      const hlsStatus = document.getElementById("hls-status");
+
+      if (hlsProgressTimer) {
+        clearInterval(hlsProgressTimer);
+        hlsProgressTimer = null;
+      }
+      if (hlsInstance) {
+        hlsInstance.stopLoad();
+        hlsInstance.detachMedia();
+        hlsInstance.destroy();
+        hlsInstance = null;
+      }
+
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+      video.style.display = "none";
+
+      if (iframe) {
+        iframe.src = "about:blank";
+        iframe.style.display = "none";
+      }
+      hlsStatus.style.display = "none";
+      document.getElementById("hls-hotkey-bar").style.display = "none";
+    }
+
+    function switchToPrimaryServer() {
+      activeServerKey = "vidnest-sub";
+      if (currentAnime) openPlayer(currentAnime, currentEp, false);
+    }
+
+    async function playAnivexaFallback(serverObj, anime, ep) {
+      const video = document.getElementById("hls-video");
+      const hlsStatus = document.getElementById("hls-status");
+      const statusText = document.getElementById("hls-status-text");
+      const cleanTitle = (anime.title.romaji || anime.title.english || "").replace(/[^\w\s-]/g, " ").trim();
+      const resumeSec = getSavedEpisodeTimestamp(anime.id, ep);
+
+      statusText.textContent = `Querying Anivexa-API (${serverObj.name}) for Ep ${ep}...`;
+      hlsStatus.style.display = "flex";
+      logMsg(`Anivexa fallback -> ${serverObj.name} | AniList #${anime.id} | "${cleanTitle}"`);
+
+      try {
+        let endpoint = `${ANIVEXA_API_URL}/watch/${serverObj.provider}/${anime.id}/${serverObj.lang}/${serverObj.provider}-${ep}`;
+        let srcRes = await fetch(endpoint);
+        let srcData = await srcRes.json();
+
+        if ((!srcRes.ok || srcData.error) && cleanTitle) {
+          logMsg(`AniList ID unmapped on ${serverObj.provider}, searching by title...`);
+          const searchRes = await fetch(`${ANIVEXA_API_URL}/search/${serverObj.provider}?q=${encodeURIComponent(cleanTitle)}`);
+          if (searchRes.ok) {
+            const searchData = await searchRes.json();
+            const hits = searchData.results || searchData.data || (Array.isArray(searchData) ? searchData : []);
+            if (hits.length > 0 && hits[0].id) {
+              const epUrl = `${ANIVEXA_API_URL}/watch/${serverObj.provider}/${hits[0].id}/${serverObj.lang}/${encodeURIComponent(hits[0].id)}-${ep}`;
+              srcRes = await fetch(epUrl);
+              srcData = await srcRes.json();
+            }
+          }
+        }
+
+        const sources = srcData.sources || srcData.data?.sources || (srcData.url ? [srcData] : []);
+        const best = sources.find(s => s.url?.includes(".m3u8")) || sources[0];
+
+        if (!best || !best.url) {
+          throw new Error(srcData.error || "No stream found on this fallback provider");
+        }
+
+        const streamUrl = best.url;
+        logMsg(`Anivexa stream resolved (Buffer cap: 30s/60s, BackBuffer: 30s).`);
+        hlsStatus.style.display = "none";
+        video.style.display = "block";
+        document.getElementById("hls-hotkey-bar").style.display = "block";
+
+        const onReadyToPlay = () => {
+          if (resumeSec > 5 && (!video.duration || resumeSec < video.duration - 15)) {
+            video.currentTime = resumeSec;
+            logMsg(`Resumed Ep ${ep} at ${formatSeconds(resumeSec)}.`);
+          }
+          video.play().catch(() => {});
+        };
+
+        if (Hls.isSupported() && streamUrl.includes(".m3u8")) {
+          hlsInstance = new Hls({
+            maxBufferLength: 30,
+            maxMaxBufferLength: 60,
+            backBufferLength: 30,
+            enableWorker: true
+          });
+          hlsInstance.loadSource(streamUrl);
+          hlsInstance.attachMedia(video);
+          hlsInstance.on(Hls.Events.MANIFEST_PARSED, onReadyToPlay);
+          hlsInstance.on(Hls.Events.ERROR, (_, data) => {
+            if (data.fatal) {
+              logMsg(`HLS playback error (${data.details}).`);
+              statusText.textContent = `${serverObj.name} stream blocked in browser. Switch back to Vidnest (Sub).`;
+              hlsStatus.style.display = "flex";
+            }
+          });
+        } else {
+          video.src = streamUrl;
+          video.onloadedmetadata = onReadyToPlay;
+        }
+
+        // Save exact timestamp every 6 seconds
+        hlsProgressTimer = setInterval(() => {
+          if (!video.paused && video.currentTime > 0) {
+            saveWatchProgress(anime, ep, video.currentTime, video.duration || 0);
+          }
+        }, 6000);
+
+        // Save on pause + trigger AniList auto-sync at 82%
+        video.onpause = () => {
+          if (video.currentTime > 0) {
+            saveWatchProgress(anime, ep, video.currentTime, video.duration || 0);
+          }
+        };
+
+        video.ontimeupdate = () => {
+          if (video.duration > 30 && (video.currentTime / video.duration) >= 0.82) {
+            syncAniListEpisodeProgress(anime, ep);
+            awardWatchXp(anime, ep);
+          }
+        };
+
+        // Auto-Next Episode on finish
+        video.onended = () => {
+          syncAniListEpisodeProgress(anime, ep);
+          awardWatchXp(anime, ep);
+          if (settings.autoNext) {
+            logMsg(`Episode ${ep} finished — Auto-Next advancing to Ep ${ep + 1}...`);
+            openPlayer(anime, ep + 1, false);
+          }
+        };
+      } catch (err) {
+        logMsg(`Anivexa fallback failed: ${err.message}`);
+        statusText.textContent = `${serverObj.name} unavailable (${err.message}).`;
+        hlsStatus.style.display = "flex";
+      }
+    }
+
+    function openPlayer(anime, ep, resetEpChunk = true) {
+      if (!currentAnime || currentAnime.id !== anime.id) showAllEpisodes = false;
+      currentAnime = anime;
+      currentEp = Math.max(1, ep);
+      saveWatchProgress(anime, currentEp);
+      updateDynamicMetaTags(anime);
+
+      const title = getAnimeTitle(anime);
+      const altTitle = getAltTitle(anime);
+      const totalEps = anime.episodes || (anime.nextAiringEpisode ? anime.nextAiringEpisode.episode - 1 : 24) || 12;
+      const studio = anime.studios?.nodes?.[0]?.name || "Unknown Studio";
+      const score = anime.averageScore ? `${(anime.averageScore / 10).toFixed(1)} / 10` : "N/A";
+      const cleanDesc = (anime.description || "No synopsis available.").replace(/<[^>]*>/g, "");
+      const genreHtml = (anime.genres || []).map(g => `<span class="genre-tag ${g === "Ecchi" ? "ecchi-tag" : ""}">${g}</span>`).join("");
+
+      document.getElementById("player-section").style.display = "block";
+      document.getElementById("now-playing-title").textContent = title;
+      document.getElementById("now-playing-meta").textContent = `${altTitle ? altTitle + " • " : ""}Episode ${currentEp} • ${anime.format || "TV"} • Score: ${score} • Studio: ${studio}`;
+      document.getElementById("anilist-sync-toast").textContent = "";
+      document.getElementById("anime-synopsis").innerHTML = `
+        <strong>Synopsis:</strong> ${cleanDesc}
+        ${genreHtml ? `<div class="genre-tags">${genreHtml}</div>` : ""}
+      `;
+      updateWatchlistButton();
+      updatePlayerShieldUI();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      stopMedia();
+
+      // Render Primary Embed Server Buttons
+      const embedBar = document.getElementById("embed-server-bar");
+      embedBar.innerHTML = "";
+      EMBED_SERVERS.forEach(srv => {
+        const btn = document.createElement("button");
+        btn.className = `secondary ${activeServerKey === srv.key ? "active-pill" : ""}`;
+        btn.textContent = srv.name;
+        btn.onclick = () => { activeServerKey = srv.key; openPlayer(anime, currentEp, false); };
+        embedBar.appendChild(btn);
+      });
+
+      // Render Anivexa Fallback Server Buttons
+      const apiBar = document.getElementById("api-server-bar");
+      apiBar.innerHTML = "";
+      API_SERVERS.forEach(srv => {
+        const btn = document.createElement("button");
+        btn.className = `secondary ${activeServerKey === srv.key ? "active-pill" : ""}`;
+        btn.textContent = srv.name;
+        btn.onclick = () => { activeServerKey = srv.key; openPlayer(anime, currentEp, false); };
+        apiBar.appendChild(btn);
+      });
+
+      // Play Selected Server
+      const apiMatch = API_SERVERS.find(s => s.key === activeServerKey);
+      if (apiMatch) {
+        playAnivexaFallback(apiMatch, anime, currentEp);
+      } else {
+        const selected = EMBED_SERVERS.find(s => s.key === activeServerKey) || EMBED_SERVERS[0];
+        const useSandbox = isSandboxEnabledForServer(selected.key);
+        const url = selected.url(anime, currentEp);
+        logMsg(`Loading [${selected.name}] (Sandbox: ${useSandbox ? "ON" : "OFF"}) -> ${url}`);
+        const currentFrame = document.getElementById("video-frame");
+        const activeFrame = applyIframeSandbox(currentFrame, useSandbox);
+        activeFrame.style.display = "block";
+        activeFrame.src = url;
+      }
+
+      // Render Mobile-Friendly Episode Grid
+      const epGrid = document.getElementById("episode-grid");
+      epGrid.innerHTML = "";
+      const limit = showAllEpisodes ? totalEps : Math.min(totalEps, 100);
+      for (let i = 1; i <= limit; i++) {
+        const btn = document.createElement("button");
+        btn.className = `secondary ep-btn ${i === currentEp ? "active-pill" : ""}`;
+        btn.textContent = `Ep ${i}`;
+        btn.onclick = () => openPlayer(anime, i, false);
+        epGrid.appendChild(btn);
+      }
+      if (!showAllEpisodes && totalEps > 100) {
+        const moreBtn = document.createElement("button");
+        moreBtn.className = "secondary ep-btn";
+        moreBtn.style.borderColor = "var(--accent)";
+        moreBtn.textContent = `+ Show All ${totalEps} Eps`;
+        moreBtn.onclick = () => { showAllEpisodes = true; openPlayer(anime, currentEp, false); };
+        epGrid.appendChild(moreBtn);
+      }
+    }
+
+    function jumpToEpisode() {
+      if (!currentAnime) return;
+      const val = parseInt(document.getElementById("ep-jump-input").value, 10);
+      if (!isNaN(val) && val >= 1) {
+        showAllEpisodes = true;
+        openPlayer(currentAnime, val, false);
+      }
+    }
+
+    function changeEpisode(delta, completedCurrent = false) {
+      if (!currentAnime) return;
+      if (delta > 0 && completedCurrent) {
+        syncAniListEpisodeProgress(currentAnime, currentEp);
+        awardWatchXp(currentAnime, currentEp);
+      }
+      openPlayer(currentAnime, currentEp + delta, false);
+    }
+
+    function closePlayer() {
+      stopMedia();
+      updateDynamicMetaTags(null);
+      document.getElementById("player-section").style.display = "none";
+    }
+
+    /* Desktop Keyboard Shortcuts (Space, F, M, N) */
+    document.addEventListener("keydown", (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      const playerOpen = document.getElementById("player-section").style.display !== "none";
+      if (!playerOpen) return;
+
+      const video = document.getElementById("hls-video");
+      const hlsVisible = video && video.style.display !== "none";
+      const key = e.key.toLowerCase();
+
+      if (key === "n") {
+        e.preventDefault();
+        changeEpisode(1, true);
+        return;
+      }
+
+      if (!hlsVisible) return;
+
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (video.paused) video.play().catch(() => {});
+        else video.pause();
+      } else if (key === "f") {
+        e.preventDefault();
+        const wrapper = document.getElementById("player-wrapper");
+        if (!document.fullscreenElement) {
+          (wrapper.requestFullscreen || video.requestFullscreen)?.call(wrapper).catch(() => {});
+        } else {
+          document.exitFullscreen?.().catch(() => {});
+        }
+      } else if (key === "m") {
+        e.preventDefault();
+        video.muted = !video.muted;
+      }
+    });
+
+    // Boot VexinStream v7.0
+    (async function init() {
+      await detectBrowser();
+      applySettingsUI();
+      initPWA();
+      checkFirstVisitMaturity();
+      initFilters();
+      await handleOAuthRedirect();
+      await initSupabaseAuth();
+      updateAuthUI();
+      renderContinueWatching();
+      logMsg(`VexinStream v7.0 (by VenixRyzen) initialized${SUPABASE_ENABLED ? " • Supabase cloud ready" : " • local mode"}.`);
+      switchTab("TRENDING");
+    })();
+  </script>
+</body>
+</html>
